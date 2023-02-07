@@ -1,0 +1,3 @@
+(fp_lib_table
+  (lib (name "dsub_cutouts")(type "KiCad")(uri "/Users/peter/Development/CockpitComponents/ecad/frontpanel_lib/footprints/dsub_cutouts.pretty")(options "")(descr ""))
+)
