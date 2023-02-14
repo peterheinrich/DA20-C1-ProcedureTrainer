@@ -1,0 +1,598 @@
+<html>
+
+<head>
+
+</head>
+
+<body style="margin:0">
+
+    <svg width="320" height="240" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+        font-family="Arial, Helvetica, sans-serif">
+        <defs>
+            <linearGradient id="grad_sky" gradientTransform="rotate(90)">
+                <stop offset="5%" stop-color="#3040CC" />
+                <stop offset="95%" stop-color="#5060A0" />
+            </linearGradient>
+            <linearGradient id="grad_gnd" gradientTransform="rotate(90)">
+                <stop offset="5%" stop-color="#805011" />
+                <stop offset="95%" stop-color="#604012" />
+            </linearGradient>
+            <linearGradient id="fadeGrad" y2="1" x2="0">
+                <stop offset="0.0" stop-color="white" stop-opacity="0" />
+                <stop offset="0.2" stop-color="white" stop-opacity="1" />
+            </linearGradient>
+
+            <mask id="fade" maskContentUnits="objectBoundingBox">
+                <rect width="1" height="1" fill="url(#fadeGrad)" />
+            </mask>
+
+            <clipPath id="altitude_mask" maskContentUnits="objectBoundingBox">
+                <path
+                    d="M 245,107 L 285,107 L 285,95 L 312,95 L 312,144 L 285,144 L 285,135 L 245,135 L 245,127 L 237,120 L 245,113 L 245,106" />
+            </clipPath>
+
+            <clipPath id="airspeed_mask" maskContentUnits="objectBoundingBox">
+                <path
+                    d="M 4,107 L 37,107 L 37,90 L 54,90 L 54,113 L 62,120 L 54,127 L 54,148 L 37,148 L 37,132 L 4,132 L 4,106" />
+            </clipPath>
+
+            <clipPath id="airspeed_tape_mask" maskContentUnits="objectBoundingBox">
+                <rect x="0" y="15" width="65" height="183"></rect>
+            </clipPath>
+
+            <linearGradient id="grad_alt_up" gradientTransform="rotate(90)">
+                <stop offset="0.1" stop-color="white" stop-opacity="1" />
+                <stop offset="1.0" stop-color="white" stop-opacity="0" />
+            </linearGradient>
+            <mask id="grad_alt_up_fade" maskContentUnits="objectBoundingBox">
+                <rect width="1" height="1" fill="url(#grad_alt_up)" />
+            </mask>
+
+            <linearGradient id="grad_alt_down" gradientTransform="rotate(90)">
+                <stop offset="0.1" stop-color="white" stop-opacity="0" />
+                <stop offset="1.0" stop-color="white" stop-opacity="1" />
+            </linearGradient>
+            <mask id="grad_alt_down_fade" maskContentUnits="objectBoundingBox">
+                <rect width="1" height="1" fill="url(#grad_alt_down)" />
+            </mask>
+
+            <clipPath id="altitude_tape_mask" maskContentUnits="objectBoundingBox">
+                <rect x="234" y="33" width="86" height="186"></rect>
+            </clipPath>
+
+
+            <line id="bank_marker_long" x1="160" y1="42" x2="160" y2="32" stroke="white" stroke-width="1.5" />
+            <line id="bank_marker_short" x1="160" y1="42" x2="160" y2="37" stroke="white" stroke-width="1.5" />
+            <line id="alt_maker_long" x1="234" y1="120" x2="244" y2="120" stroke="white" />
+            <line id="alt_maker_short" x1="234" y1="120" x2="240" y2="120" stroke="white" />
+            <line id="as_maker_long" x1="55" y1="120" x2="65" y2="120" stroke="white" />
+            <line id="as_maker_short" x1="59" y1="120" x2="65" y2="120" stroke="white" />
+
+        </defs>
+
+        <g id="horizon" transform="rotate(0,160,120) translate(0,0)">
+            <rect x="-100" y="-300" width="500" height="500" fill="url('#grad_sky')" />
+            <rect x="-100" y="120" width="500" height="500" fill="url('#grad_gnd')" />
+            <line x1="-100" y1="120" x2="400" y2="120" stroke="white"></line>
+        </g>
+
+        <g id="pitchbar" transform="rotate(0,160,120) translate(0,0)" stroke="white" mask="url(#fade)">
+            <text x="118" y="84" font-size="12" stroke="transparent" fill="white" font-weight="bold">10</text>
+            <text x="190" y="84" font-size="12" stroke="transparent" fill="white" font-weight="bold">10</text>
+            <line x1="145" y1="60" x2="175" y2="60"></line>
+            <line x1="152" y1="70" x2="168" y2="70"></line>
+            <line x1="137" y1="80" x2="183" y2="80"></line>
+            <line x1="152" y1="90" x2="168" y2="90"></line>
+            <line x1="145" y1="100" x2="175" y2="100"></line>
+            <line x1="152" y1="110" x2="168" y2="110"></line>
+            <text x="118" y="164" font-size="12" stroke="transparent" fill="white" font-weight="bold">10</text>
+            <text x="190" y="164" font-size="12" stroke="transparent" fill="white" font-weight="bold">10</text>
+            <line x1="152" y1="130" x2="168" y2="130"></line>
+            <line x1="145" y1="140" x2="175" y2="140"></line>
+            <line x1="152" y1="150" x2="168" y2="150"></line>
+            <line x1="137" y1="160" x2="183" y2="160"></line>
+            <line x1="152" y1="170" x2="168" y2="170"></line>
+            <line x1="145" y1="180" x2="175" y2="180"></line>
+        </g>
+
+
+
+        <path d="M 160,42 l -5,10 l 10,0 l-5,-10" fill="white"></path>
+        <g id="bank_indicator" transform="rotate(0,160,128) translate(0,0)">
+            <path d="M 92,80 A 80,80 120 0,1 228,80" stroke="white" stroke-width="2" fill="transparent" />
+            <use xlink:href="#bank_marker_long" transform="rotate(-60,160,120)" />
+            <use xlink:href="#bank_marker_long" transform="rotate(-30,160,120)" />
+            <use xlink:href="#bank_marker_long" transform="rotate(0,160,120)" />
+            <use xlink:href="#bank_marker_long" transform="rotate(30,160,120)" />
+            <use xlink:href="#bank_marker_long" transform="rotate(60,160,120)" />
+            <use xlink:href="#bank_marker_short" transform="rotate(-45,160,120)" />
+            <use xlink:href="#bank_marker_short" transform="rotate(-20,160,120)" />
+            <use xlink:href="#bank_marker_short" transform="rotate(-10,160,120)" />
+            <use xlink:href="#bank_marker_short" transform="rotate(10,160,120)" />
+            <use xlink:href="#bank_marker_short" transform="rotate(20,160,120)" />
+            <use xlink:href="#bank_marker_short" transform="rotate(45,160,120)" />
+            <path d="M 160,42 l -5,-10 l 10,0 l-5,10 " fill="white"></path>
+        </g>
+
+        <!-- Arrow Symbols -->
+        <path d="M 111,146 L 160,120 L 125,146 L 111,146" stroke="black" fill="#c0c020"></path>
+        <path d="M 125,146 L 160,120 L 139,146 L 125,146" stroke="black" fill="#656520"></path>
+        <path d="M 181,146 L 160,120 L 195,146 L 181,146" stroke="black" fill="#656520"></path>
+        <path d="M 195,146 L 160,120 L 209,146 L 195,146" stroke="black" fill="#c0c020"></path>
+
+        <!-- right background -->
+        <rect x="234" y="0" width="86" height="240" fill="black" fill-opacity="0.3"></rect>
+
+        <!-- ASI Bug -->
+        <rect x="235" y="0" width="85" height="19" stroke-width="1" stroke="#808080"></rect>
+        <path d="M 238,4 l5,0 l0,3 l-3,3 l3,3 l0,3 l-5,0 l0,-12" fill="#07d0d0"></path>
+        <text x="305" y="16" text-anchor="end" font-size="18" font-weight="bold" fill="#07d0d0">5000</text>
+
+        <!-- QNH -->
+        <rect x="235" y="220" width="84" height="19" stroke-width="2" stroke="#07d0d0"></rect>
+        <text id="qnh" x="255" y="236" font-size="18" font-weight="bold" fill="#07d0d0">1013</text>
+
+        <!-- Altitude Tape -->
+        <g clip-path="url(#altitude_tape_mask)">
+            <g id="alt_tape" transform="translate(0,0)">
+                <use xlink:href="#alt_maker_short" transform="translate(0,-144)" />
+                <use xlink:href="#alt_maker_short" transform="translate(0,-132)" />
+                <use xlink:href="#alt_maker_long" transform="translate(0,-120)" />
+                <text id="alt_tape_upper2t" x="260" y="4" font-size="14" font-weight="bold" fill="white"
+                    text-anchor="end">1</text>
+                <text id="alt_tape_upper2" x="260" y="3" font-size="12" font-weight="bold" fill="white">200</text>
+                <use xlink:href="#alt_maker_short" transform="translate(0,-108)" />
+                <use xlink:href="#alt_maker_short" transform="translate(0,-96)" />
+                <use xlink:href="#alt_maker_short" transform="translate(0,-84)" />
+                <use xlink:href="#alt_maker_short" transform="translate(0,-72)" />
+                <use xlink:href="#alt_maker_long" transform="translate(0,-60)" />
+                <text id="alt_tape_upper1t" x="260" y="64" font-size="14" font-weight="bold" fill="white"
+                    text-anchor="end">1</text>
+                <text id="alt_tape_upper1" x="260" y="63" font-size="12" font-weight="bold" fill="white">100</text>
+
+                <use xlink:href="#alt_maker_short" transform="translate(0,-48)" />
+                <use xlink:href="#alt_maker_short" transform="translate(0,-36)" />
+                <use xlink:href="#alt_maker_short" transform="translate(0,-24)" />
+                <use xlink:href="#alt_maker_short" transform="translate(0,-12)" />
+                <use xlink:href="#alt_maker_long" transform="translate(0,0)" />
+                <text id="alt_tape_centert" x="260" y="124" font-size="14" font-weight="bold" fill="white"
+                    text-anchor="end">1</text>
+                <text id="alt_tape_center" x="260" y="123" font-size="12" font-weight="bold" fill="white">000</text>
+
+                <use xlink:href="#alt_maker_short" transform="translate(0,12)" />
+                <use xlink:href="#alt_maker_short" transform="translate(0,24)" />
+                <use xlink:href="#alt_maker_short" transform="translate(0,36)" />
+                <use xlink:href="#alt_maker_short" transform="translate(0,48)" />
+                <use xlink:href="#alt_maker_long" transform="translate(0,60)" />
+                <text id="alt_tape_lower1t" x="260" y="184" font-size="14" font-weight="bold" fill="white"
+                    text-anchor="end"></text>
+                <text id="alt_tape_lower1" x="260" y="183" font-size="12" font-weight="bold" fill="white">900</text>
+
+                <use xlink:href="#alt_maker_short" transform="translate(0,72)" />
+                <use xlink:href="#alt_maker_short" transform="translate(0,84)" />
+                <use xlink:href="#alt_maker_short" transform="translate(0,96)" />
+                <use xlink:href="#alt_maker_short" transform="translate(0,108)" />
+                <use xlink:href="#alt_maker_long" transform="translate(0,120)" />
+                <text id="alt_tape_lower2t" x="260" y="244" font-size="14" font-weight="bold" fill="white"
+                    text-anchor="end"></text>
+                <text id="alt_tape_lower2" x="260" y="243" font-size="12" font-weight="bold" fill="white">800</text>
+                <use xlink:href="#alt_maker_short" transform="translate(0,132)" />
+                <use xlink:href="#alt_maker_short" transform="translate(0,144)" />
+            </g>
+        </g>
+
+
+        <path
+            d="M 245,106 L 285,106 L 285,95 L 312,95 L 312,146 L 285,146 L 285,135 L 245,135 L 245,127 L 237,120 L 245,113 L 245,106"
+            stroke="#808080" fill="black"></path>
+
+        <!-- Altitude Indicator -->
+        <g clip-path="url(#altitude_mask)">
+            <g id="digit12_tape" transform="translate(0,0)">
+                <rect x="286" y="2" width="25" height="150"></rect>
+                <text x="287" y="149" font-size="20" font-weight="bold" fill="white">80</text>
+                <text x="287" y="127" font-size="20" font-weight="bold" fill="white">00</text>
+                <text x="287" y="105" font-size="20" font-weight="bold" fill="white">20</text>
+                <text x="287" y="83" font-size="20" font-weight="bold" fill="white">40</text>
+                <text x="287" y="61" font-size="20" font-weight="bold" fill="white">60</text>
+                <text x="287" y="39" font-size="20" font-weight="bold" fill="white">80</text>
+                <text x="287" y="17" font-size="20" font-weight="bold" fill="white">00</text>
+            </g>
+            <g id="digit3_tape" transform="translate(0,0)">
+                <rect x="275" y="-108" width="11" height="260"></rect>
+                <text x="276" y="149" font-size="20" font-weight="bold" fill="white">9</text>
+                <text x="276" y="127" font-size="20" font-weight="bold" fill="white">0</text>
+                <text x="276" y="105" font-size="20" font-weight="bold" fill="white">1</text>
+                <text x="276" y="83" font-size="20" font-weight="bold" fill="white">2</text>
+                <text x="276" y="61" font-size="20" font-weight="bold" fill="white">3</text>
+                <text x="276" y="39" font-size="20" font-weight="bold" fill="white">4</text>
+                <text x="276" y="17" font-size="20" font-weight="bold" fill="white">5</text>
+                <text x="276" y="-5" font-size="20" font-weight="bold" fill="white">6</text>
+                <text x="276" y="-27" font-size="20" font-weight="bold" fill="white">7</text>
+                <text x="276" y="-49" font-size="20" font-weight="bold" fill="white">8</text>
+                <text x="276" y="-71" font-size="20" font-weight="bold" fill="white">9</text>
+                <text x="276" y="-93" font-size="20" font-weight="bold" fill="white">0</text>
+            </g>
+            <g id="digit4_tape" transform="translate(0,22)">
+                <rect x="262" y="-108" width="13" height="260"></rect>
+                <text x="263" y="150" font-size="24" font-weight="bold" fill="white">9</text>
+                <text x="263" y="128" font-size="24" font-weight="bold" fill="white">0</text>
+                <text x="263" y="106" font-size="24" font-weight="bold" fill="white">1</text>
+                <text x="263" y="84" font-size="24" font-weight="bold" fill="white">2</text>
+                <text x="263" y="62" font-size="24" font-weight="bold" fill="white">3</text>
+                <text x="263" y="40" font-size="24" font-weight="bold" fill="white">4</text>
+                <text x="263" y="18" font-size="24" font-weight="bold" fill="white">5</text>
+                <text x="263" y="-4" font-size="24" font-weight="bold" fill="white">6</text>
+                <text x="263" y="-26" font-size="24" font-weight="bold" fill="white">7</text>
+                <text x="263" y="-48" font-size="24" font-weight="bold" fill="white">8</text>
+                <text x="263" y="-70" font-size="24" font-weight="bold" fill="white">9</text>
+                <text x="263" y="-92" font-size="24" font-weight="bold" fill="white">0</text>
+            </g>
+            <g id="digit5_tape" transform="translate(0,-44)">
+                <rect x="262" y="-108" width="13" height="260"></rect>
+                <text x="263" y="150" font-size="24" font-weight="bold" fill="white">9</text>
+                <text x="263" y="128" font-size="24" font-weight="bold" fill="white">0</text>
+                <text x="263" y="106" font-size="24" font-weight="bold" fill="white">1</text>
+                <text x="263" y="84" font-size="24" font-weight="bold" fill="white">2</text>
+                <text x="263" y="62" font-size="24" font-weight="bold" fill="white">3</text>
+                <text x="263" y="40" font-size="24" font-weight="bold" fill="white">4</text>
+                <text x="263" y="18" font-size="24" font-weight="bold" fill="white">5</text>
+                <text x="263" y="-4" font-size="24" font-weight="bold" fill="white">6</text>
+                <text x="263" y="-26" font-size="24" font-weight="bold" fill="white">7</text>
+                <text x="263" y="-48" font-size="24" font-weight="bold" fill="white">8</text>
+                <text x="263" y="-70" font-size="24" font-weight="bold" fill="white">9</text>
+                <text x="263" y="-92" font-size="24" font-weight="bold" fill="white">0</text>
+            </g>
+            <rect x="245" y="95" width="67" height="16" mask="url(#grad_alt_up_fade)"></rect>
+            <rect x="245" y="128" width="67" height="16" mask="url(#grad_alt_down_fade)"></rect>
+
+        </g>
+
+        <rect x="0" y="15" width="65" height="198" fill="black" fill-opacity="0.3"></rect>
+
+        <!-- TAS -->
+        <rect x="0" y="0" width="65" height="14" stroke-width="1" stroke="#808080"></rect>
+        <text x="3" y="11" font-size="9" font-weight="bold" fill="#C0C0C0">TAS</text>
+        <text id="tas" x="62" y="11" text-anchor="end" font-size="10" font-weight="bold" fill="white">160</text>
+
+        <!-- Ground Speed -->
+        <rect x="0" y="212" width="65" height="14" stroke-width="1" stroke="#808080"></rect>
+        <text x="3" y="222" font-size="9" font-weight="bold" fill="#C0C0C0">GS</text>
+        <text id="gs" x="62" y="222" text-anchor="end" font-size="10" font-weight="bold" fill="#E000C0">140</text>
+
+        <!-- Outside Air Temp -->
+        <rect x="0" y="226" width="65" height="14" stroke-width="1" stroke="#808080"></rect>
+        <text x="3" y="236" font-size="9" font-weight="bold" fill="#C0C0C0">OAT</text>
+        <text id="oat" x="62" y="236" text-anchor="end" font-size="10" font-weight="bold" fill="#C0C0C0">15°C</text>
+
+        <!-- Airspeed Tape -->
+        <g clip-path="url(#airspeed_tape_mask)">
+            <g id="as_tape" transform="translate(0,0)">
+                <g transform="translate(0,0)">
+                    <rect x="60" y="-352" width="5" height="472" fill="#20A010"></rect>
+                    <rect x="62.5" y="-192" width="2.5" height="312" fill="#E0E0E0"></rect>
+
+                    <rect x="60" y="-536" width="5" height="184" fill="#D0D000"></rect>
+                    <rect x="60" y="-680" width="5" height="144" fill="#F00000"></rect>
+
+                    <use xlink:href="#as_maker_long" transform="translate(0,0)" />
+                    <use xlink:href="#as_maker_short" transform="translate(0,-20)" />
+                    <use xlink:href="#as_maker_long" transform="translate(0,-40)" />
+                    <use xlink:href="#as_maker_short" transform="translate(0,-60)" />
+                    <use xlink:href="#as_maker_long" transform="translate(0,-80)" />
+                    <use xlink:href="#as_maker_short" transform="translate(0,-100)" />
+                    <use xlink:href="#as_maker_long" transform="translate(0,-120)" />
+                    <use xlink:href="#as_maker_short" transform="translate(0,-140)" />
+                    <use xlink:href="#as_maker_long" transform="translate(0,-160)" />
+                    <use xlink:href="#as_maker_short" transform="translate(0,-180)" />
+                    <use xlink:href="#as_maker_long" transform="translate(0,-200)" />
+                    <use xlink:href="#as_maker_short" transform="translate(0,-220)" />
+                    <use xlink:href="#as_maker_long" transform="translate(0,-240)" />
+                    <use xlink:href="#as_maker_short" transform="translate(0,-260)" />
+                    <use xlink:href="#as_maker_long" transform="translate(0,-280)" />
+                    <use xlink:href="#as_maker_short" transform="translate(0,-300)" />
+                    <use xlink:href="#as_maker_long" transform="translate(0,-320)" />
+                    <use xlink:href="#as_maker_short" transform="translate(0,-340)" />
+                    <use xlink:href="#as_maker_long" transform="translate(0,-360)" />
+                    <use xlink:href="#as_maker_short" transform="translate(0,-380)" />
+                    <use xlink:href="#as_maker_long" transform="translate(0,-400)" />
+                    <use xlink:href="#as_maker_short" transform="translate(0,-420)" />
+                    <use xlink:href="#as_maker_long" transform="translate(0,-440)" />
+                    <use xlink:href="#as_maker_short" transform="translate(0,-460)" />
+                    <use xlink:href="#as_maker_long" transform="translate(0,-480)" />
+                    <use xlink:href="#as_maker_short" transform="translate(0,-500)" />
+                    <use xlink:href="#as_maker_long" transform="translate(0,-520)" />
+                    <use xlink:href="#as_maker_short" transform="translate(0,-540)" />
+                    <use xlink:href="#as_maker_long" transform="translate(0,-560)" />
+                    <use xlink:href="#as_maker_short" transform="translate(0,-580)" />
+                    <use xlink:href="#as_maker_long" transform="translate(0,-600)" />
+                    <use xlink:href="#as_maker_short" transform="translate(0,-620)" />
+                    <use xlink:href="#as_maker_long" transform="translate(0,-640)" />
+                    <use xlink:href="#as_maker_short" transform="translate(0,-660)" />
+                    <use xlink:href="#as_maker_long" transform="translate(0,-680)" />
+                    <use xlink:href="#as_maker_short" transform="translate(0,-700)" />
+                    <use xlink:href="#as_maker_long" transform="translate(0,-720)" />
+                    <use xlink:href="#as_maker_short" transform="translate(0,-740)" />
+                    <use xlink:href="#as_maker_long" transform="translate(0,-760)" />
+                    <use xlink:href="#as_maker_short" transform="translate(0,-780)" />
+                    <use xlink:href="#as_maker_long" transform="translate(0,-800)" />
+
+                    <text text-anchor="end" x="50" y="125" font-size="14" font-weight="bold" fill="white">0</text>
+                    <text text-anchor="end" x="50" y="85" font-size="14" font-weight="bold" fill="white">10</text>
+                    <text text-anchor="end" x="50" y="45" font-size="14" font-weight="bold" fill="white">20</text>
+                    <text text-anchor="end" x="50" y="05" font-size="14" font-weight="bold" fill="white">30</text>
+                    <text text-anchor="end" x="50" y="-35" font-size="14" font-weight="bold" fill="white">40</text>
+                    <text text-anchor="end" x="50" y="-75" font-size="14" font-weight="bold" fill="white">50</text>
+                    <text text-anchor="end" x="50" y="-115" font-size="14" font-weight="bold" fill="white">60</text>
+                    <text text-anchor="end" x="50" y="-155" font-size="14" font-weight="bold" fill="white">70</text>
+                    <text text-anchor="end" x="50" y="-195" font-size="14" font-weight="bold" fill="white">80</text>
+                    <text text-anchor="end" x="50" y="-235" font-size="14" font-weight="bold" fill="white">90</text>
+                    <text text-anchor="end" x="50" y="-275" font-size="14" font-weight="bold" fill="white">100</text>
+                    <text text-anchor="end" x="50" y="-315" font-size="14" font-weight="bold" fill="white">110</text>
+                    <text text-anchor="end" x="50" y="-355" font-size="14" font-weight="bold" fill="white">120</text>
+                    <text text-anchor="end" x="50" y="-395" font-size="14" font-weight="bold" fill="white">130</text>
+                    <text text-anchor="end" x="50" y="-435" font-size="14" font-weight="bold" fill="white">140</text>
+                    <text text-anchor="end" x="50" y="-475" font-size="14" font-weight="bold" fill="white">150</text>
+                    <text text-anchor="end" x="50" y="-515" font-size="14" font-weight="bold" fill="white">160</text>
+                    <text text-anchor="end" x="50" y="-555" font-size="14" font-weight="bold" fill="white">170</text>
+                    <text text-anchor="end" x="50" y="-595" font-size="14" font-weight="bold" fill="white">180</text>
+                    <text text-anchor="end" x="50" y="-635" font-size="14" font-weight="bold" fill="white">190</text>
+                    <text text-anchor="end" x="50" y="-675" font-size="14" font-weight="bold" fill="white">200</text>
+
+                </g>
+            </g>
+        </g>
+
+
+        <!-- AirSpeed Indicator -->
+        <path d="M 4,106 L 37,106 L 37,90 L 54,90 L 54,113 L 62,120 L 54,127 L 54,148 L 37,148 L 37,134 L 4,133 L 4,106"
+            stroke="#808080" fill="black" />
+        <g clip-path="url(#airspeed_mask)">
+
+            <g id="as_digit3_tape" transform="translate(0,0)">
+                <rect x="8" y="-108" width="13" height="260"></rect>
+                <text x="9" y="150" font-size="24" font-weight="bold" fill="white">9</text>
+                <text x="9" y="128" font-size="24" font-weight="bold" fill="white">0</text>
+                <text x="9" y="106" font-size="24" font-weight="bold" fill="white">1</text>
+                <text x="9" y="84" font-size="24" font-weight="bold" fill="white">2</text>
+                <text x="9" y="62" font-size="24" font-weight="bold" fill="white">3</text>
+                <text x="9" y="40" font-size="24" font-weight="bold" fill="white">4</text>
+                <text x="9" y="18" font-size="24" font-weight="bold" fill="white">5</text>
+                <text x="9" y="-4" font-size="24" font-weight="bold" fill="white">6</text>
+                <text x="9" y="-26" font-size="24" font-weight="bold" fill="white">7</text>
+                <text x="9" y="-48" font-size="24" font-weight="bold" fill="white">8</text>
+                <text x="9" y="-70" font-size="24" font-weight="bold" fill="white">9</text>
+                <text x="9" y="-92" font-size="24" font-weight="bold" fill="white">0</text>
+            </g>
+
+            <g id="as_digit2_tape" transform="translate(0,0)">
+                <rect x="24" y="-108" width="13" height="260"></rect>
+                <text x="25" y="150" font-size="24" font-weight="bold" fill="white">9</text>
+                <text x="25" y="128" font-size="24" font-weight="bold" fill="white">0</text>
+                <text x="25" y="106" font-size="24" font-weight="bold" fill="white">1</text>
+                <text x="25" y="84" font-size="24" font-weight="bold" fill="white">2</text>
+                <text x="25" y="62" font-size="24" font-weight="bold" fill="white">3</text>
+                <text x="25" y="40" font-size="24" font-weight="bold" fill="white">4</text>
+                <text x="25" y="18" font-size="24" font-weight="bold" fill="white">5</text>
+                <text x="25" y="-4" font-size="24" font-weight="bold" fill="white">6</text>
+                <text x="25" y="-26" font-size="24" font-weight="bold" fill="white">7</text>
+                <text x="25" y="-48" font-size="24" font-weight="bold" fill="white">8</text>
+                <text x="25" y="-70" font-size="24" font-weight="bold" fill="white">9</text>
+                <text x="25" y="-92" font-size="24" font-weight="bold" fill="white">0</text>
+            </g>
+
+            <g id="as_digit1_tape" transform="translate(0,0)">
+                <rect x="39" y="-108" width="13" height="260"></rect>
+                <text x="40" y="150" font-size="24" font-weight="bold" fill="white">9</text>
+                <text x="40" y="128" font-size="24" font-weight="bold" fill="white">0</text>
+                <text x="40" y="106" font-size="24" font-weight="bold" fill="white">1</text>
+                <text x="40" y="84" font-size="24" font-weight="bold" fill="white">2</text>
+                <text x="40" y="62" font-size="24" font-weight="bold" fill="white">3</text>
+                <text x="40" y="40" font-size="24" font-weight="bold" fill="white">4</text>
+                <text x="40" y="18" font-size="24" font-weight="bold" fill="white">5</text>
+                <text x="40" y="-4" font-size="24" font-weight="bold" fill="white">6</text>
+                <text x="40" y="-26" font-size="24" font-weight="bold" fill="white">7</text>
+                <text x="40" y="-48" font-size="24" font-weight="bold" fill="white">8</text>
+                <text x="40" y="-70" font-size="24" font-weight="bold" fill="white">9</text>
+                <text x="40" y="-92" font-size="24" font-weight="bold" fill="white">0</text>
+            </g>
+            <rect x="39" y="90" width="67" height="16" mask="url(#grad_alt_up_fade)"></rect>
+            <rect x="39" y="132" width="67" height="16" mask="url(#grad_alt_down_fade)"></rect>
+        </g>
+
+        <text x="2" y="200" font-size="10" font-weight="bold" fill="#C0C0C0">K</text>
+        <text x="2" y="210" font-size="10" font-weight="bold" fill="#C0C0C0">T</text>
+
+        <!-- Slip/Skid indicator-->
+        <circle id="ball" cx="160" cy="216" r="10" stroke="black" fill="white" />
+        <rect x="146" y="205" width="3" height="22" stroke="black" fill="white"></rect>
+        <rect x="171" y="205" width="3" height="22" stroke="black" fill="white"></rect>
+
+        <!-- heading -->
+        <path d="M 140,0 L180,0 L 180,16 L 164,16 L 160,20 L 156,16 L 140,16 L 140,0" stroke="#808080"></path>      
+        <text id="ch" x="144" y="14" fill="white" font-size="16" font-weight="bold">000°</text>
+
+    </svg>
+
+
+
+    <script>
+
+        var pitch = 0.0;
+        var roll = 10.0;
+
+        connectSim();
+        function connectSim() {
+            var ws = new WebSocket('ws://localhost:8080/ws')
+            ws.onopen = function (ev) {
+                
+            }
+            ws.onmessage = function (ev) {
+                try {
+                    var data = JSON.parse(ev.data);
+                    if (data.name == "indicated-altitude-ft") {
+                        setAltitude(data.value);
+                    }
+                    else if (data.name == "indicated-roll-deg") {
+                        setRoll(data.value);
+                        updateRollAndPitch();
+                    }
+                    else if (data.name == "indicated-pitch-deg") {
+                        setPitch(data.value);
+                        updateRollAndPitch();
+                    }
+                    else if (data.name == "setting-hpa") {
+                        updateQNH(data.value);
+                    }
+                    else if (data.name == "groundspeed-kt") {
+                        updateGS(data.value);
+                    }
+                    else if (data.name == "temperature-degc") {
+                        updateOAT(data.value);
+                    }
+                    else if (data.name == "airspeed-kt") {
+                        updateTAS(data.value);
+                    }
+                    else if (data.name == "indicated-speed-kt") {
+                        updateIAS(data.value);
+                    }
+
+
+                } catch (e) {
+                    console.log('Exception in onmessage:' + e)
+                }
+            }
+            ws.onclose = function (ev) {
+                var msg = 'Lost connection to FlightGear.'
+                console.log(msg);
+            }
+
+            ws.onerror = function (ev) {
+                var msg = 'Error communicating with FlightGear.'
+                console.log(msg);
+            }
+        }
+
+        function setPitch(val) {
+            this.pitch = val;
+        }
+        function setRoll(val) {
+            this.roll = (-1) * val;
+        }
+        function updateGS(val) {
+            gs = document.getElementById('gs');
+            gs.innerHTML = Math.round(val);
+        }
+        function updateOAT(val) {
+            oat = document.getElementById('oat');
+            oat.innerHTML = Math.round(val) + "°C";
+        }
+
+        function updateTAS(val) {
+            tas = document.getElementById('tas');
+            tas.innerHTML = Math.round(val);
+        }
+
+        function updateIAS(val) {
+            as_tape = document.getElementById('as_tape');
+            as_tape.setAttribute("transform", "translate(0," + (val * 4) + ")");
+
+            as_digit3_tape = document.getElementById('as_digit3_tape');
+            as_digit2_tape = document.getElementById('as_digit2_tape');
+            as_digit1_tape = document.getElementById('as_digit1_tape');
+
+            // blank if leading digit is zero
+            if (Math.floor(val / 100) === 0) {
+                scrollAirspeedDigit(as_digit3_tape, -2);
+                if (Math.floor(val / 10) === 0) {
+                    scrollAirspeedDigit(as_digit2_tape, -2);
+                }
+                else {
+                    scrollAirspeedDigit(as_digit2_tape, Math.floor((val % 100) / 10));
+                }
+            }
+            else {
+                scrollAirspeedDigit(as_digit3_tape, Math.floor((val % 1000) / 100));
+                scrollAirspeedDigit(as_digit2_tape, Math.floor((val % 100) / 10));
+            }
+            digit3 = (val % 10);
+            scrollAirspeedDigit(as_digit1_tape, digit3);
+
+        }
+        function scrollAirspeedDigit(digit_tape, value) {
+            digit_tape.setAttribute("transform", "translate(0," + (value * 22) + ")");
+        }
+
+        function updateRollAndPitch() {
+            pitchbar = document.getElementById('pitchbar');
+            bank_indicator = document.getElementById('bank_indicator');
+            horizon = document.getElementById('horizon');
+
+            pitchbar.setAttribute("transform", "rotate(" + this.roll + ",160,128) translate(0," + 4 * pitch + ")");
+            bank_indicator.setAttribute("transform", "rotate(" + this.roll + ",160,128)  ");
+            horizon.setAttribute("transform", "rotate(" + this.roll + ",160,128)  translate(0," + 4 * pitch + ")");
+        }
+
+        function updateQNH(val) {
+            qnh = document.getElementById('qnh');
+            qnh.innerHTML = Math.round(val);
+        }
+
+        function setAltitude(alt) {
+            tape5 = document.getElementById('digit5_tape');
+            tape4 = document.getElementById('digit4_tape');
+            tape3 = document.getElementById('digit3_tape');
+            tape12 = document.getElementById('digit12_tape');
+
+            // blank if leading digit is zero
+            if (Math.floor(alt / 10000) === 0) {
+                scrollAltitudeDigit(tape5, -2);
+            }
+            else {
+                scrollAltitudeDigit(tape5, Math.floor(alt / 10000));
+            }
+            digit4 = ((alt % 10000) - (alt % 1000)) / 1000;
+            scrollAltitudeDigit(tape4, digit4);
+            digit3 = ((alt % 1000) - (alt % 100)) / 100;
+            scrollAltitudeDigit(tape3, digit3);
+            digit12 = (alt % 100) / 20;
+            scrollAltitudeDigit(tape12, digit12);
+
+            scrollAltitudeTape(alt);
+        }
+
+        function scrollAltitudeDigit(digit_tape, value) {
+            digit_tape.setAttribute("transform", "translate(0," + (value * 22) + ")");
+        }
+
+        function scrollAltitudeTape(alt) {
+            nearest = Math.round(alt / 100) * 100
+            distance = alt - nearest;
+            // alt_tape_lower2
+            tape = document.getElementById('alt_tape');
+            u2t = document.getElementById('alt_tape_upper2t');
+            u2 = document.getElementById('alt_tape_upper2');
+            u1t = document.getElementById('alt_tape_upper1t');
+            u1 = document.getElementById('alt_tape_upper1');
+            ct = document.getElementById('alt_tape_centert');
+            c = document.getElementById('alt_tape_center');
+            l1t = document.getElementById('alt_tape_lower1t');
+            l1 = document.getElementById('alt_tape_lower1');
+            l2t = document.getElementById('alt_tape_lower2t');
+            l2 = document.getElementById('alt_tape_lower2');
+            u2t.innerHTML = Math.floor((nearest + 200) / 1000);
+            u2.innerHTML = ('000' + Math.floor(nearest + 200) % 1000).substr(-3);
+            u1t.innerHTML = Math.floor((nearest + 100) / 1000);
+            u1.innerHTML = ('000' + Math.floor(nearest + 100) % 1000).substr(-3);
+            ct.innerHTML = Math.floor((nearest) / 1000);
+            c.innerHTML = ('000' + Math.floor(nearest) % 1000).substr(-3);
+            l1t.innerHTML = Math.floor((nearest - 100) / 1000);
+            l1.innerHTML = ('000' + Math.floor(nearest - 100) % 1000).substr(-3);
+            l2t.innerHTML = Math.floor((nearest - 200) / 1000);
+            l2.innerHTML = ('000' + Math.floor(nearest - 200) % 1000).substr(-3);
+            tape.setAttribute("transform", "translate(0," + (distance / 100 * 60) + ")");
+        }
+    </script>
+</body>
+
+</html>
