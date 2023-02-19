@@ -2582,10 +2582,10 @@
       (reference "C41") (unit 1) (value "1u") (footprint "Capacitor_SMD:C_0603_1608Metric")
     )
     (path "/225ea517-dcc5-47bf-a550-0fd1a2afcef1/24a905e6-ba41-447c-8e3b-8431c8eb0cbe"
-      (reference "C42") (unit 1) (value "27p") (footprint "Capacitor_SMD:C_0603_1608Metric")
+      (reference "C42") (unit 1) (value "10p") (footprint "Capacitor_SMD:C_0603_1608Metric")
     )
     (path "/225ea517-dcc5-47bf-a550-0fd1a2afcef1/fb33f28b-20e9-4e2f-b6e4-dad93eec802b"
-      (reference "C43") (unit 1) (value "27p") (footprint "Capacitor_SMD:C_0603_1608Metric")
+      (reference "C43") (unit 1) (value "10p") (footprint "Capacitor_SMD:C_0603_1608Metric")
     )
     (path "/225ea517-dcc5-47bf-a550-0fd1a2afcef1/787549c8-a8f5-47cb-929e-bfaab1eb97a8"
       (reference "C44") (unit 1) (value "100n") (footprint "Capacitor_SMD:C_0603_1608Metric")
