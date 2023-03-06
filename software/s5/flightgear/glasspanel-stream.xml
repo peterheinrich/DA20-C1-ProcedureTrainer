@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+
+<PropertyList>
+  <comment>
+    Common instrument data information for glass panel simulation.
+
+    Broadcast (or send to specific IP) via UDP on port 30000 at 10 Hz:
+
+    --generic=socket,out,10,127.0.0.1,30000,udp,glasspanel-stream
+
+  </comment>
+  <generic>
+    <output>
+      <line_separator>newline</line_separator>
+      <var_separator>,</var_separator>
+      <chunk>
+        <name>IAS(KTS)</name>
+        <type>float</type>
+        <format>%.1f</format>
+        <node>/instrumentation/airspeed-indicator/indicated-speed-kt</node>
+      </chunk>
+      <chunk>
+        <name>TAS(KTS)</name>
+        <type>float</type>
+        <format>%.1f</format>
+        <node>/instrumentation/airspeed-indicator/true-speed-kt</node>
+      </chunk>
+      <chunk>
+        <name>GS(KTS)</name>
+        <type>float</type>
+        <format>%.1f</format>
+        <node>/velocitites/groundspeed-kt</node>
+      </chunk>
+      <chunk>
+        <name>ALT(FT)</name>
+        <type>float</type>
+        <format>%.1f</format>
+        <node>/instrumentation/altimeter/indicated-altitude-ft</node>
+      </chunk>
+      <chunk>
+        <name>QNH(HPA)</name>
+        <type>float</type>
+        <format>%.1f</format>
+        <node>/instrumentation/altimeter/setting-hpa</node>
+      </chunk>
+      <chunk>
+        <name>PITCH(DEG)</name>
+        <type>float</type>
+        <format>%.1f</format>
+        <node>/instrumentation/attitude-indicator/indicated-pitch-deg</node>
+      </chunk>
+      <chunk>
+        <name>ROLL(DEG)</name>
+        <type>float</type>
+        <format>%.1f</format>
+        <node>/instrumentation/attitude-indicator/indicated-roll-deg</node>
+      </chunk>
+      <chunk>
+        <name>OAT(DEGC)</name>
+        <type>float</type>
+        <format>%.1f</format>
+        <node>/environment/temperature-degc</node>
+      </chunk>
+    </output>
+  </generic>
+</PropertyList>
