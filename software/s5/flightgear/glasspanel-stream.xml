@@ -61,6 +61,18 @@
         <format>%.1f</format>
         <node>/environment/temperature-degc</node>
       </chunk>
+      <chunk>
+        <name>SLIP_SKID</name>
+        <type>float</type>
+        <format>%.1f</format>
+        <node>/instrumentation/slip-skid-ball/indicated-slip-skid</node>
+      </chunk>
+      <chunk>
+        <name>HDG(deg)</name>
+        <type>float</type>
+        <format>%.1f</format>
+        <node>/instrumentation/heading-indicator/indicated-heading-deg</node>
+      </chunk>
     </output>
   </generic>
 </PropertyList>

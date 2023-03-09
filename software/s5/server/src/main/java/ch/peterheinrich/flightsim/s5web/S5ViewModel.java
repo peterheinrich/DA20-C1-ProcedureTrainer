@@ -13,6 +13,8 @@ public class S5ViewModel {
     private float indicated_pitch_deg;
     private float indicated_roll_deg;
     private float temperature_degc;
+    private float indicated_slip_skid;
+    private float indicated_heading_deg;
 
     @Autowired
 	private WebSocketController socket;
@@ -61,9 +63,17 @@ public class S5ViewModel {
         if(this.temperature_degc == temperature_degc) return;
         this.temperature_degc = temperature_degc;
         socket.send(new DataDTO("temperature-degc",this.temperature_degc));
-
     }
 
+    public void setIndicated_slip_skid(float indicated_slip_skid) {
+        if(this.indicated_slip_skid == indicated_slip_skid) return;
+        this.indicated_slip_skid = indicated_slip_skid;
+        socket.send(new DataDTO("indicated-slip-skid",this.indicated_slip_skid));
+    }
+    public void setIndicated_heading_deg(float indicated_heading_deg) {
+        if(this.indicated_heading_deg == indicated_heading_deg) return;
+        this.indicated_heading_deg = indicated_heading_deg;
+        socket.send(new DataDTO("indicated-heading-deg",this.indicated_heading_deg));    }
     
     
 }

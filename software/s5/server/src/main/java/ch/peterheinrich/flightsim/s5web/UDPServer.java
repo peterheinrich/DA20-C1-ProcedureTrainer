@@ -17,7 +17,7 @@ public class UDPServer {
     public void handleMessage(Message<String> message) {
         String line = new String(message.getPayload());
         String[] data = line.split(",");
-        if(data.length < 8) {
+        if(data.length < 10) {
             System.out.println("Data truncated!");
             return;
         }
@@ -29,5 +29,7 @@ public class UDPServer {
         viewModel.setIndicated_pitch_deg(Float.parseFloat(data[5]));
         viewModel.setIndicated_roll_deg(Float.parseFloat(data[6]));
         viewModel.setTemperature_degc(Float.parseFloat(data[7]));
+        viewModel.setIndicated_slip_skid(Float.parseFloat(data[8]));
+        viewModel.setIndicated_heading_deg(Float.parseFloat(data[9]));
     }
 }

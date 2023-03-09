@@ -40,6 +40,10 @@
                 <rect x="0" y="15" width="65" height="183"></rect>
             </clipPath>
 
+            <clipPath id="hdg_mask" maskContentUnits="objectBoundingBox">
+                <rect x="66" y="0" width="168" height="25"></rect>
+            </clipPath>
+
             <linearGradient id="grad_alt_up" gradientTransform="rotate(90)">
                 <stop offset="0.1" stop-color="white" stop-opacity="1" />
                 <stop offset="1.0" stop-color="white" stop-opacity="0" />
@@ -67,6 +71,18 @@
             <line id="alt_maker_short" x1="234" y1="120" x2="240" y2="120" stroke="white" />
             <line id="as_maker_long" x1="55" y1="120" x2="65" y2="120" stroke="white" />
             <line id="as_maker_short" x1="59" y1="120" x2="65" y2="120" stroke="white" />
+            
+            <g id="hdg_dots">
+                <line x1="4" y1="25" x2="4" y2="23"></line>
+                <line x1="8" y1="25" x2="8" y2="23"></line>
+                <line x1="12" y1="25" x2="12" y2="23"></line>
+                <line x1="16" y1="25" x2="16" y2="23"></line>
+                <line x1="24" y1="25" x2="24" y2="23"></line>
+                <line x1="28" y1="25" x2="28" y2="23"></line>
+                <line x1="32" y1="25" x2="32" y2="23"></line>
+                <line x1="36" y1="25" x2="36" y2="23"></line>
+
+            </g>
 
         </defs>
 
@@ -263,7 +279,7 @@
         <!-- Outside Air Temp -->
         <rect x="0" y="226" width="65" height="14" stroke-width="1" stroke="#808080"></rect>
         <text x="3" y="236" font-size="9" font-weight="bold" fill="#C0C0C0">OAT</text>
-        <text id="oat" x="62" y="236" text-anchor="end" font-size="10" font-weight="bold" fill="#C0C0C0">15°C</text>
+        <text id="oat" x="62" y="236" text-anchor="end" font-size="10" font-weight="bold" fill="#C0C0C0">15&#8451;</text>
 
         <!-- Airspeed Tape -->
         <g clip-path="url(#airspeed_tape_mask)">
@@ -408,9 +424,118 @@
         <rect x="146" y="205" width="3" height="22" stroke="black" fill="white"></rect>
         <rect x="171" y="205" width="3" height="22" stroke="black" fill="white"></rect>
 
+
+        <rect x="66" y="0" width="168" height="25" fill="#000000" opacity="0.3"></rect>
+
+        <!-- heading tape -->
+        <g clip-path="url(#hdg_mask)">
+            <g transform="translate(160,0)">
+                <g id="headingTape" stroke="#CCCCCC" stroke-width="1.5" >
+                    <text x="-100" y="12" font-size="8" stroke-width="0.5" stroke="#CCCCCC" fill="#CCCCCC" text-anchor="middle">300</text>
+                    <use xlink:href="#hdg_dots" transform="translate(-100,0)" />
+                    <line x1="-100" y1="25" x2="-100" y2="17"></line>
+                    <line x1="-80" y1="25" x2="-80" y2="17"></line>
+                    <text x="-80" y="12" font-size="8" stroke-width="0.5" stroke="#CCCCCC" fill="#CCCCCC" text-anchor="middle">320</text>
+                    <use xlink:href="#hdg_dots" transform="translate(-80,0)" />
+                    <line x1="-60" y1="25" x2="-60" y2="17"></line>
+                    <line x1="-40" y1="25" x2="-40" y2="17"></line>
+                    <text x="-40" y="12" font-size="8" stroke-width="0.5" stroke="#CCCCCC" fill="#CCCCCC" text-anchor="middle">340</text>
+                    <use xlink:href="#hdg_dots" transform="translate(-40,0)" />
+                    <line x1="-20" y1="25" x2="-20" y2="17"></line>
+                    <line x1="0" y1="25" x2="0" y2="17"></line>
+                    <text x="0" y="12" font-size="8" stroke-width="0.5" stroke="#CCCCCC" fill="#CCCCCC" text-anchor="middle">000</text>
+                    <use xlink:href="#hdg_dots" transform="translate(0,0)" />
+                    <line x1="20" y1="25" x2="20" y2="17"></line>
+                    <line x1="40" y1="25" x2="40" y2="17"></line>
+                    <text x="40" y="12" font-size="8" stroke-width="0.5" stroke="#CCCCCC" fill="#CCCCCC" text-anchor="middle">020</text>
+                    <use xlink:href="#hdg_dots" transform="translate(40,0)" />
+                    <line x1="60" y1="25" x2="60" y2="17"></line>
+                    <line x1="80" y1="25" x2="80" y2="17"></line>
+                    <text x="80" y="12" font-size="8" stroke-width="0.5" stroke="#CCCCCC" fill="#CCCCCC" text-anchor="middle">040</text>
+                    <use xlink:href="#hdg_dots" transform="translate(80,0)" />
+                    <line x1="100" y1="25" x2="100" y2="17"></line>
+                    <line x1="120" y1="25" x2="120" y2="17"></line>
+                    <text x="120" y="12" font-size="8" stroke-width="0.5" stroke="#CCCCCC" fill="#CCCCCC" text-anchor="middle">060</text>
+                    <use xlink:href="#hdg_dots" transform="translate(120,0)" />
+                    <line x1="140" y1="25" x2="140" y2="17"></line>
+                    <line x1="160" y1="25" x2="160" y2="17"></line>
+                    <text x="160" y="12" font-size="8" stroke-width="0.5" stroke="#CCCCCC" fill="#CCCCCC" text-anchor="middle">080</text>
+                    <use xlink:href="#hdg_dots" transform="translate(160,0)" />
+                    <line x1="180" y1="25" x2="180" y2="17"></line>
+                    <line x1="200" y1="25" x2="200" y2="17"></line>
+                    <text x="200" y="12" font-size="8" stroke-width="0.5" stroke="#CCCCCC" fill="#CCCCCC" text-anchor="middle">100</text>
+                    <use xlink:href="#hdg_dots" transform="translate(200,0)" />
+                    <line x1="220" y1="25" x2="220" y2="17"></line>
+                    <line x1="240" y1="25" x2="240" y2="17"></line>
+                    <text x="240" y="12" font-size="8" stroke-width="0.5" stroke="#CCCCCC" fill="#CCCCCC" text-anchor="middle">120</text>
+                    <use xlink:href="#hdg_dots" transform="translate(240,0)" />
+                    <line x1="260" y1="25" x2="260" y2="17"></line>
+                    <line x1="280" y1="25" x2="280" y2="17"></line>
+                    <text x="280" y="12" font-size="8" stroke-width="0.5" stroke="#CCCCCC" fill="#CCCCCC" text-anchor="middle">140</text>
+                    <use xlink:href="#hdg_dots" transform="translate(280,0)" />
+                    <line x1="300" y1="25" x2="300" y2="17"></line>
+                    <line x1="320" y1="25" x2="320" y2="17"></line>
+                    <text x="320" y="12" font-size="8" stroke-width="0.5" stroke="#CCCCCC" fill="#CCCCCC" text-anchor="middle">160</text>
+                    <use xlink:href="#hdg_dots" transform="translate(320,0)" />
+                    <line x1="340" y1="25" x2="340" y2="17"></line>
+                    <line x1="360" y1="25" x2="360" y2="17"></line>
+                    <text x="360" y="12" font-size="8" stroke-width="0.5" stroke="#CCCCCC" fill="#CCCCCC" text-anchor="middle">180</text>
+                    <use xlink:href="#hdg_dots" transform="translate(360,0)" />
+                    <line x1="380" y1="25" x2="380" y2="17"></line>
+                    <line x1="400" y1="25" x2="400" y2="17"></line>
+                    <text x="400" y="12" font-size="8" stroke-width="0.5" stroke="#CCCCCC" fill="#CCCCCC" text-anchor="middle">200</text>
+                    <use xlink:href="#hdg_dots" transform="translate(400,0)" />
+                    <line x1="420" y1="25" x2="420" y2="17"></line>
+                    <line x1="440" y1="25" x2="440" y2="17"></line>
+                    <text x="440" y="12" font-size="8" stroke-width="0.5" stroke="#CCCCCC" fill="#CCCCCC" text-anchor="middle">220</text>
+                    <use xlink:href="#hdg_dots" transform="translate(440,0)" />
+                    <line x1="460" y1="25" x2="460" y2="17"></line>
+                    <line x1="480" y1="25" x2="480" y2="17"></line>
+                    <text x="480" y="12" font-size="8" stroke-width="0.5" stroke="#CCCCCC" fill="#CCCCCC" text-anchor="middle">240</text>
+                    <use xlink:href="#hdg_dots" transform="translate(480,0)" />
+                    <line x1="500" y1="25" x2="500" y2="17"></line>
+                    <line x1="520" y1="25" x2="520" y2="17"></line>
+                    <text x="520" y="12" font-size="8" stroke-width="0.5" stroke="#CCCCCC" fill="#CCCCCC" text-anchor="middle">260</text>
+                    <use xlink:href="#hdg_dots" transform="translate(520,0)" />
+                    <line x1="540" y1="25" x2="540" y2="17"></line>
+                    <line x1="560" y1="25" x2="560" y2="17"></line>
+                    <text x="560" y="12" font-size="8" stroke-width="0.5" stroke="#CCCCCC" fill="#CCCCCC" text-anchor="middle">280</text>
+                    <use xlink:href="#hdg_dots" transform="translate(560,0)" />
+                    <line x1="580" y1="25" x2="580" y2="17"></line>
+                    <line x1="600" y1="25" x2="600" y2="17"></line>
+                    <text x="600" y="12" font-size="8" stroke-width="0.5" stroke="#CCCCCC" fill="#CCCCCC" text-anchor="middle">300</text>
+                    <use xlink:href="#hdg_dots" transform="translate(600,0)" />
+                    <line x1="620" y1="25" x2="620" y2="17"></line>
+                    <line x1="640" y1="25" x2="640" y2="17"></line>
+                    <text x="640" y="12" font-size="8" stroke-width="0.5" stroke="#CCCCCC" fill="#CCCCCC" text-anchor="middle">320</text>
+                    <use xlink:href="#hdg_dots" transform="translate(640,0)" />
+                    <line x1="660" y1="25" x2="660" y2="17"></line>
+                    <line x1="680" y1="25" x2="680" y2="17"></line>
+                    <text x="680" y="12" font-size="8" stroke-width="0.5" stroke="#CCCCCC" fill="#CCCCCC" text-anchor="middle">340</text>
+                    <use xlink:href="#hdg_dots" transform="translate(680,0)" />
+                    <line x1="700" y1="25" x2="700" y2="17"></line>
+                    <line x1="720" y1="25" x2="720" y2="17"></line>
+                    <text x="720" y="12" font-size="8" stroke-width="0.5" stroke="#CCCCCC" fill="#CCCCCC" text-anchor="middle">000</text>
+                    <use xlink:href="#hdg_dots" transform="translate(720,0)" />
+                    <line x1="740" y1="25" x2="740" y2="17"></line>
+                    <line x1="760" y1="25" x2="760" y2="17"></line>
+                    <text x="760" y="12" font-size="8" stroke-width="0.5" stroke="#CCCCCC" fill="#CCCCCC" text-anchor="middle">020</text>
+                    <use xlink:href="#hdg_dots" transform="translate(760,0)" />
+                    <line x1="780" y1="25" x2="780" y2="17"></line>
+                    <line x1="800" y1="25" x2="800" y2="17"></line>
+                    <text x="800" y="12" font-size="8" stroke-width="0.5" stroke="#CCCCCC" fill="#CCCCCC" text-anchor="middle">040</text>
+                    <use xlink:href="#hdg_dots" transform="translate(800,0)" />
+
+
+
+                </g>
+            </g>
+
+        </g>
         <!-- heading -->
         <path d="M 140,0 L180,0 L 180,16 L 164,16 L 160,20 L 156,16 L 140,16 L 140,0" stroke="#808080"></path>      
-        <text id="ch" x="144" y="14" fill="white" font-size="16" font-weight="bold">000°</text>
+        <text id="hdg" x="144" y="14" fill="white" font-size="16" font-weight="bold">000&#176;</text>
+
 
     </svg>
 
@@ -456,6 +581,13 @@
                     else if (data.name == "indicated-speed-kt") {
                         updateIAS(data.value);
                     }
+                    else if (data.name == "indicated-slip-skid") {
+                        updateSlipSkidBall(data.value);
+                    }
+                    else if (data.name == "indicated-heading-deg") {
+                        updateHdg(data.value);
+                    }
+
 
 
                 } catch (e) {
@@ -473,6 +605,28 @@
             }
         }
 
+
+        function updateHdg(val) {
+            tape = document.getElementById('headingTape');
+            tape.setAttribute("transform", "translate("+ val / 360 * (-720)+",0)");
+            field = document.getElementById('hdg');
+            displayString = "";
+            val = Math.round(val);
+            if (val == 360) val = 0;
+            
+            if(val < 100)
+                displayString = "0";
+            if(val < 10)
+                displayString += "0";
+            field.innerHTML = displayString + val + "&#176;";
+        }
+
+        function updateSlipSkidBall(val) {
+            ball = document.getElementById('ball');
+            ball.setAttribute("transform", "translate("+ val * (-13)+",0)");
+
+        }
+
         function setPitch(val) {
             this.pitch = val;
         }
@@ -485,7 +639,7 @@
         }
         function updateOAT(val) {
             oat = document.getElementById('oat');
-            oat.innerHTML = Math.round(val) + "°C";
+            oat.innerHTML = Math.round(val) + "&#8451;";
         }
 
         function updateTAS(val) {
