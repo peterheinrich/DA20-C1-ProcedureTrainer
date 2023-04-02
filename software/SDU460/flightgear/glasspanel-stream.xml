@@ -13,6 +13,9 @@
     <output>
       <line_separator>newline</line_separator>
       <var_separator>,</var_separator>
+
+      <!-- S5 and SDU460 -->
+
       <chunk>
         <name>IAS(KTS)</name>
         <type>float</type>
@@ -73,6 +76,81 @@
         <format>%.1f</format>
         <node>/instrumentation/heading-indicator/indicated-heading-deg</node>
       </chunk>
+      
+      <!-- SDU460 specific additions -->
+      <chunk>
+        <name>Track(deg)</name>
+        <type>float</type>
+        <format>%.1f</format>
+        <node>/instrumentation/gps/indicated-track-true-deg</node>
+      </chunk>
+      <chunk>
+        <name>LAT</name>
+        <type>float</type>
+        <format>%.6f</format>
+        <node>/position/latitude-deg</node>
+      </chunk>
+      <chunk>
+        <name>LONG</name>
+        <type>float</type>
+        <format>%.6f</format>
+        <node>/position/longitude-deg</node>
+      </chunk>
+      <chunk>
+        <name>RPM</name>
+        <type>float</type>
+        <format>%.1f</format>
+        <node>/engines/engine/rpm</node>
+      </chunk>
+      <chunk>
+        <name>Oil(psi)</name>
+        <type>float</type>
+        <format>%.1f</format>
+        <node>/engines/engine/oil-pressure-psi</node>
+      </chunk>
+      <chunk>
+        <name>OilT(f)</name>
+        <type>float</type>
+        <format>%.1f</format>
+        <node>/engines/engine/oil-temperature-degf</node>
+      </chunk>
+      <chunk>
+        <name>CHT(f)</name>
+        <type>float</type>
+        <format>%.1f</format>
+        <node>/engines/engine/cht-degf</node>
+      </chunk>
+      <chunk>
+        <name>EGT(f)</name>
+        <type>float</type>
+        <format>%.1f</format>
+        <node>/engines/engine/egt-degf</node>
+      </chunk>
+      <chunk>
+        <name>Amps</name>
+        <type>float</type>
+        <format>%.1f</format>
+        <node>/systems/electrical/amps</node>
+      </chunk>
+      <chunk>
+        <name>Volts</name>
+        <type>float</type>
+        <format>%.1f</format>
+        <node>/systems/electrical/volts</node>
+      </chunk>
+      <chunk>
+        <name>VS(fpm)</name>
+        <type>float</type>
+        <format>%.1f</format>
+        <node>/instrumentation/vertical-speed-indicator/indicated-speed-fpm</node>
+      </chunk>
+      <chunk>
+        <name>Time</name>
+        <type>string</type>
+        <format>%s</format>
+        <node>/sim/time/gmt-string</node>
+      </chunk>
+
     </output>
   </generic>
 </PropertyList>

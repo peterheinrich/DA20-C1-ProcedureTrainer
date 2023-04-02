@@ -10,10 +10,10 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>ch.peterheinrich.flightsim</groupId>
-	<artifactId>s5web</artifactId>
+	<artifactId>sdu460web</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>s5web</name>
-	<description>Web simulation of the Garmin G5 display</description>
+	<name>sdu460web</name>
+	<description>Web simulation of the Garmin GDU 460 display</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>

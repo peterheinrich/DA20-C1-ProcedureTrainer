@@ -12,6 +12,10 @@
 #define IN_CLK      12
 #define IN_D        14
 
+#define IN_D        14
+#define CM4_ENAB    17
+#define EXT_ENAB    18
+
 
 volatile unsigned int outputRegister = 0;
 volatile unsigned int inputRegister = 0;
@@ -41,7 +45,7 @@ bool TimerHandler(struct repeating_timer *t)
 { 
   timer ++;
   
-  moveSteppers(0);
+  // moveSteppers(0);
   unsigned int inputRegisterNew = readInputRegister();
   if(inputRegister != inputRegisterNew) {
     inputRegister = inputRegisterNew;
@@ -52,8 +56,6 @@ bool TimerHandler(struct repeating_timer *t)
 }
 
 #define TIMER_FREQ_HZ        500
-
-
 
 void setup() {
   pinMode(LED, OUTPUT);
@@ -66,6 +68,14 @@ void setup() {
   pinMode(IN_CLK, OUTPUT);
   pinMode(IN_D, INPUT);
 
+
+  pinMode(CM4_ENAB, OUTPUT);
+  pinMode(EXT_ENAB, OUTPUT);
+
+  digitalWrite(CM4_ENAB,1);
+  digitalWrite(EXT_ENAB,1);
+
+
   digitalWrite(OUT_LATCH,0);
   digitalWrite(OUT_CLK,0);
   digitalWrite(OUT_D,0);
@@ -73,17 +83,55 @@ void setup() {
   digitalWrite(IN_CLK,0);
   digitalWrite(STEP_SBY,1);
 
-  ITimer1.attachInterrupt(TIMER_FREQ_HZ, TimerHandler);
+  Serial2.setRX(5);
+  Serial2.setTX(4);
+  Serial2.begin(9600);
 
+  //Serial2.setRX(5);
+  //Serial2.setTX(4);
+  //Serial2.begin(9600);
+
+  ITimer1.attachInterrupt(TIMER_FREQ_HZ, TimerHandler);
+  Serial2.setTimeout(100);
 }
 
+char buffer[64];
 // the loop routine runs over and over again forever:
 void loop() {
-  // wait for the nex 100ms mark
-  while (timer < 100) {};
-  timer = 0;
+  
+  if(flagSendUpdate) {
+    sendByteValueHex((inputRegister >> 24) & 0xFF);
+    Serial2.print(",");
+    sendByteValueHex((inputRegister >> 16) & 0xFF);
+    Serial2.print(",");
+    sendByteValueHex((inputRegister >> 8) & 0xFF);
+    Serial2.print(",");
+    sendByteValueHex((inputRegister) & 0xFF);
+    Serial2.println();
+    flagSendUpdate = false;
+  }
+  Serial2.readBytesUntil('\n', buffer, 64);
+  String line = String(buffer);
+  char byteBuffer[8];
+  char *end;
+  line.substring(0,1).toCharArray(byteBuffer, 8);
+  unsigned char c0 = strtol(byteBuffer,&end,16);
+  line.substring(3,4).toCharArray(byteBuffer, 8);
+  unsigned char c1 = strtol(byteBuffer,&end,16);
+  line.substring(6,7).toCharArray(byteBuffer, 8);
+  unsigned char c2= strtol(byteBuffer,&end,16);  
+  outputRegister = c0 | c1 << 8 | c2 << 16;
 
+  writeOutputRegister();
+
+  
 }
+
+void sendByteValueHex(unsigned short val) {
+  if(val < 16) Serial2.print("0");
+  Serial2.print(val, HEX);
+}
+
 
 
 void writeOutputRegister() {
@@ -109,18 +157,20 @@ void writeOutputRegister() {
 unsigned int readInputRegister() {
   unsigned int res = 0;
   // Latch
-  delayMicroseconds(1);   
   digitalWrite(IN_LATCH,1);
-  delayMicroseconds(1);   
-  digitalWrite(IN_LATCH,0);
+  delayMicroseconds(5);   
+   
   for(int i = 0; i < 32; i++) {
     // Clock
+        res |= digitalRead(IN_D) << 31-i;
+
     delayMicroseconds(1);   
-    digitalWrite(OUT_CLK,1);
+    digitalWrite(IN_CLK,1);
     delayMicroseconds(1);   
-    digitalWrite(OUT_CLK,0);
-    res |= digitalRead(IN_D) << 31-i;
+    digitalWrite(IN_CLK,0);
   }
+
+  digitalWrite(IN_LATCH,0);
   return res;
 }
 

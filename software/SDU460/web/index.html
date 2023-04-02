@@ -1,0 +1,1437 @@
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+    crossorigin=""/>
+
+    <style>
+        .leaflet-layer {
+            filter: hue-rotate(150deg) invert(100%);
+        }
+    </style>
+    
+</head>
+
+<body style="margin:0">
+    <div>    
+        <svg width="1280" height="800" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+        font-family="Arial, Helvetica, sans-serif">
+            <!-- MAP -->
+            <g id="mapcontainer">
+                <foreignobject x="723" y="56" width="557" height="720">
+                    <div id="map" style="margin:0; height: 720; z-index:-1"></div>
+                </foreignobject>
+            </g>
+               
+        </svg>
+    </div>
+
+    <div style="margin-top: -800px">
+        <svg width="1280" height="800" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+            font-family="Arial, Helvetica, sans-serif">
+            <defs>
+                <line id="compass_line_long" x1="0" y1="-135" x2="0" y2="-119" stroke="#DDDDDD"></line>
+                <line id="compass_line_short" x1="0" y1="-135" x2="0" y2="-129" stroke="#DDDDDD"></line>
+                <line id="compass_line_strong" x1="0" y1="-135" x2="0" y2="-112" stroke-width="2" stroke="#DDDDDD"></line>
+                <line id="compass_line_outer" x1="0" y1="-140" x2="0" y2="-152" stroke-width="2.5" stroke="#DDDDDD"></line>
+                <line id="compass_line_outer_thin" x1="0" y1="-140" x2="0" y2="-152" stroke-width="1" stroke="#DDDDDD"></line>
+
+                <linearGradient id="grad_sky" gradientTransform="rotate(90)">
+                    <stop offset="5%" stop-color="#3040CC" />
+                    <stop offset="95%" stop-color="#5060A0" />
+                </linearGradient>
+                <linearGradient id="grad_gnd" gradientTransform="rotate(90)">
+                    <stop offset="5%" stop-color="#805011" />
+                    <stop offset="95%" stop-color="#604012" />
+                </linearGradient>
+
+                <clipPath id="horizon_clip" maskContentUnits="objectBoundingBox">
+                    <rect x="162" y="62" width="559" height="714"></rect>
+                </clipPath>
+
+                <clipPath id="speed_tape_clip" maskContentUnits="objectBoundingBox">
+                    <rect x="0" y="30" width="98" height="275"></rect>
+                </clipPath>
+
+                <!-- Speed Tape Lines -->
+                <line id="speed_tape_long" x1="82" y1=0 x2="98" y2="0" stroke="#CCCCCC" stroke-width="2"></line>
+                <line id="speed_tape_short" x1="85" y1=0 x2="98" y2="0" stroke="#CCCCCC" stroke-width="2"></line>
+ 
+                <!-- Altimeter Tape Lines -->
+                <line id="altimeter_tape_long" x1="0" y1=0 x2="13" y2="0" stroke="#CCCCCC" stroke-width="2"></line>
+                <line id="altimeter_tape_short" x1="0" y1=0 x2="8" y2="0" stroke="#CCCCCC" stroke-width="2"></line>
+
+                <!-- Speed Dials -->
+                <g id="speed_dial">
+                    <rect x="0" y="-367" width="20" height="446" fill="black"></rect>
+                    <text x="10" y="-320" alignment-baseline="central" fill="white" font-weight="bold" font-size="32" text-anchor="middle">0</text>
+                    <text x="10" y="-288" alignment-baseline="central" fill="white" font-weight="bold" font-size="32" text-anchor="middle">9</text>
+                    <text x="10" y="-256" alignment-baseline="central" fill="white" font-weight="bold" font-size="32" text-anchor="middle">8</text>
+                    <text x="10" y="-224" alignment-baseline="central" fill="white" font-weight="bold" font-size="32" text-anchor="middle">7</text>
+                    <text x="10" y="-192" alignment-baseline="central" fill="white" font-weight="bold" font-size="32" text-anchor="middle">6</text>
+                    <text x="10" y="-160" alignment-baseline="central" fill="white" font-weight="bold" font-size="32" text-anchor="middle">5</text>
+                    <text x="10" y="-128" alignment-baseline="central" fill="white" font-weight="bold" font-size="32" text-anchor="middle">4</text>
+                    <text x="10" y="-96" alignment-baseline="central" fill="white" font-weight="bold" font-size="32" text-anchor="middle">3</text>
+                    <text x="10" y="-64" alignment-baseline="central" fill="white" font-weight="bold" font-size="32" text-anchor="middle">2</text>
+                    <text x="10" y="-32" alignment-baseline="central" fill="white" font-weight="bold" font-size="32" text-anchor="middle">1</text>         
+                    <text x="10" y="0" alignment-baseline="central" fill="white" font-weight="bold" font-size="32" text-anchor="middle">0</text>
+                    <text x="10" y="32" alignment-baseline="central" fill="white" font-weight="bold" font-size="32" text-anchor="middle">9</text>
+                </g>
+
+                <!-- Altimeter Dials -->
+                <g id="altimeter_dial_double">
+                    <text x="13" y="-125" alignment-baseline="central" fill="white" font-weight="bold" font-size="24" text-anchor="middle">00</text>
+                    <text x="13" y="-100" alignment-baseline="central" fill="white" font-weight="bold" font-size="24" text-anchor="middle">80</text>
+                    <text x="13" y="-75" alignment-baseline="central" fill="white" font-weight="bold" font-size="24" text-anchor="middle">60</text>
+                    <text x="13" y="-50" alignment-baseline="central" fill="white" font-weight="bold" font-size="24" text-anchor="middle">40</text>
+                    <text x="13" y="-25" alignment-baseline="central" fill="white" font-weight="bold" font-size="24" text-anchor="middle">20</text>         
+                    <text x="13" y="0" alignment-baseline="central" fill="white" font-weight="bold" font-size="24" text-anchor="middle">00</text>
+                    <text x="13" y="25" alignment-baseline="central" fill="white" font-weight="bold" font-size="24" text-anchor="middle">80</text>
+                </g>
+                <g id="altimeter_dial_small">
+                    <text x="7" y="-250" alignment-baseline="central" fill="white" font-weight="bold" font-size="24" text-anchor="middle">0</text>
+                    <text x="7" y="-225" alignment-baseline="central" fill="white" font-weight="bold" font-size="24" text-anchor="middle">9</text>
+                    <text x="7" y="-200" alignment-baseline="central" fill="white" font-weight="bold" font-size="24" text-anchor="middle">8</text>
+                    <text x="7" y="-175" alignment-baseline="central" fill="white" font-weight="bold" font-size="24" text-anchor="middle">7</text>
+                    <text x="7" y="-150" alignment-baseline="central" fill="white" font-weight="bold" font-size="24" text-anchor="middle">6</text>
+                    <text x="7" y="-125" alignment-baseline="central" fill="white" font-weight="bold" font-size="24" text-anchor="middle">5</text>
+                    <text x="7" y="-100" alignment-baseline="central" fill="white" font-weight="bold" font-size="24" text-anchor="middle">4</text>
+                    <text x="7" y="-75" alignment-baseline="central" fill="white" font-weight="bold" font-size="24" text-anchor="middle">3</text>
+                    <text x="7" y="-50" alignment-baseline="central" fill="white" font-weight="bold" font-size="24" text-anchor="middle">2</text>
+                    <text x="7" y="-25" alignment-baseline="central" fill="white" font-weight="bold" font-size="24" text-anchor="middle">1</text>         
+                    <text x="7" y="0" alignment-baseline="central" fill="white" font-weight="bold" font-size="24" text-anchor="middle">0</text>
+                    <text x="7" y="25" alignment-baseline="central" fill="white" font-weight="bold" font-size="24" text-anchor="middle">9</text>
+                </g>
+
+                <g id="altimeter_dial_large">
+                    <rect x="0" y="-367" width="20" height="446" fill="black"></rect>
+                    <text x="10" y="-320" alignment-baseline="central" fill="white" font-weight="bold" font-size="32" text-anchor="middle">0</text>
+                    <text x="10" y="-288" alignment-baseline="central" fill="white" font-weight="bold" font-size="32" text-anchor="middle">9</text>
+                    <text x="10" y="-256" alignment-baseline="central" fill="white" font-weight="bold" font-size="32" text-anchor="middle">8</text>
+                    <text x="10" y="-224" alignment-baseline="central" fill="white" font-weight="bold" font-size="32" text-anchor="middle">7</text>
+                    <text x="10" y="-192" alignment-baseline="central" fill="white" font-weight="bold" font-size="32" text-anchor="middle">6</text>
+                    <text x="10" y="-160" alignment-baseline="central" fill="white" font-weight="bold" font-size="32" text-anchor="middle">5</text>
+                    <text x="10" y="-128" alignment-baseline="central" fill="white" font-weight="bold" font-size="32" text-anchor="middle">4</text>
+                    <text x="10" y="-96" alignment-baseline="central" fill="white" font-weight="bold" font-size="32" text-anchor="middle">3</text>
+                    <text x="10" y="-64" alignment-baseline="central" fill="white" font-weight="bold" font-size="32" text-anchor="middle">2</text>
+                    <text x="10" y="-32" alignment-baseline="central" fill="white" font-weight="bold" font-size="32" text-anchor="middle">1</text>         
+                    <text x="10" y="0" alignment-baseline="central" fill="white" font-weight="bold" font-size="32" text-anchor="middle">0</text>
+                    <text x="10" y="32" alignment-baseline="central" fill="white" font-weight="bold" font-size="32" text-anchor="middle">9</text>
+                </g>
+
+                <clipPath id="speed_dial_clip">
+                    <path d="M0,0 L0,-13 A4,4,90,0,1,4,-17 L55,-17 L55,-31 A4,4,90,0,1,59,-35 L71,-35 A4,4,90,0,1,75,-31 L75,-6 L81,0 L75,6 L75,31 A4,4,90,0,1,71,35 L59,35 A4,4,90,0,1,55,31 L55,17 L4,17 A4,4,90,0,1,0,13 L0,0"></path>
+                </clipPath>
+
+                <clipPath id="altimeter_dial_clip">
+                    <path d="M0,0 L7,-7 L7,-13 A4,4,90,0,1,11,-16 L58,-16 L58,-25 A4,4,90,0,1,62,-29 L84,-29 A4,4,90,0,1,88,-25 L88,26 A4,4,90,0,1,84,29 L62,30 A4,4,90,0,1,58,25 L58,16 L11,16 A4,4,90,0,1,7,13 L7,7 L0,0"></path>
+                </clipPath>
+
+                <!-- Bank lines -->
+                <line id="bank_line_long" x1="0" y1="-124" x2="0" y2="-141" stroke="white" stroke-width="2"></line>
+                <line id="bank_line_short" x1="0" y1="-124" x2="0" y2="-133" stroke="white" stroke-width="2"></line>
+                
+                <!-- Attitude lines -->
+                <line id="attitude_line_short" x1="-13" y1="0" x2="13" y2="0" stroke-width="2" stroke="white"></line>
+                <line id="attitude_line_long" x1="-20" y1="0" x2="20" y2="0" stroke-width="2" stroke="white"></line>
+
+                <!-- Pitch Fade Gradient -->
+                <linearGradient id="pitchFadeGradient" x1="-1" y1="-1"  x2="1" y2="1" gradientTransform="rotate(90)">
+                    <stop offset="40%" stop-color="white" stop-opacity="0" />
+                    <stop offset="50%" stop-color="white" stop-opacity="1" />
+                    <stop offset="50%" stop-color="white" stop-opacity="1" />
+                    <stop offset="60%" stop-color="white" stop-opacity="0" />
+
+                </linearGradient>
+    
+                <mask id="pitchFadeMask" maskContentUnits="objectBoundingBox">
+                    <rect x="-1" y="0" width="10" height="2" fill="url(#pitchFadeGradient)" />
+                </mask>
+                <clipPath id="pitch_clip">
+                    <rect x="-100" y="-100" width="200" height="200"></rect>
+                </clipPath>
+
+                <!-- Button Gradient -->
+                <linearGradient id="grad_btn" gradientTransform="rotate(90)">
+                    <stop offset="0%" stop-color="#000000" />
+                    <stop offset="15%" stop-color="#555555" />
+                    <stop offset="50%" stop-color="#000000" />
+                </linearGradient>
+
+
+                <linearGradient id="grad_alt_up" gradientTransform="rotate(90)">
+                    <stop offset="0.1" stop-color="white" stop-opacity="1" />
+                    <stop offset="1.0" stop-color="white" stop-opacity="0" />
+                </linearGradient>
+                <mask id="grad_alt_up_fade" maskContentUnits="objectBoundingBox">
+                    <rect width="1" height="1" fill="url(#grad_alt_up)" />
+                </mask>
+    
+                <linearGradient id="grad_alt_down" gradientTransform="rotate(90)">
+                    <stop offset="0.1" stop-color="white" stop-opacity="0" />
+                    <stop offset="1.0" stop-color="white" stop-opacity="1" />
+                </linearGradient>
+                <mask id="grad_alt_down_fade" maskContentUnits="objectBoundingBox">
+                    <rect width="1" height="1" fill="url(#grad_alt_down)" />
+                </mask>
+
+            </defs>
+            <rect x="0" y="0" width="161" height="800" fill="black"></rect>
+            <rect x="0" y="0" width="1280" height="61" fill="black"></rect>
+            <rect x="161" y="61" width="560" height="688" fill="black"></rect>
+            <rect x="161" y="776" width="1139" height="24" fill="black"></rect>
+
+            <line x1="0" y1="61" x2="1280" y2="61" stroke="white" stroke-width="1.5"></line>
+            <line x1="161" y1="61" x2="161" y2="800" stroke="white" stroke-width="1.5"></line>
+            <line x1="720" y1="61" x2="720" y2="800" stroke="white" stroke-width="1.5"></line>
+
+            <!-- 
+            *******************************************************************
+            TOP SCREEN
+            *******************************************************************
+            -->
+            <rect x="1" y="1" width="244" height="59" stroke="#666666" fill="black" stroke-width="2" ry="5" rx="5"></rect>
+            <g transform="translate(0,0)">
+                <rect x="3" y="3" width="118" height="55" stroke="black" fill="url(#grad_btn)" stroke-width="2" ry="5" rx="5"></rect>
+                <text x="60" y="11" font-size="14" font-weight="bold" fill="white" text-anchor="middle" alignment-baseline="central" >COM 1</text>
+                <text id="COM1" x="60" y="29" font-size="28" font-weight="bold" fill="#00CC00" text-anchor="middle" alignment-baseline="central" >134.830</text>
+                <text id="COM1_LABEL" x="60" y="48" font-size="14" font-weight="bold" fill="white" text-anchor="middle" alignment-baseline="central" >LSZM AD</text>
+
+            </g>
+            <g transform="translate(122,0)">
+                <rect x="3" y="3" width="118" height="55" stroke="black" fill="url(#grad_btn)" stroke-width="2" ry="5" rx="5"></rect>
+                <text x="58" y="11" font-size="14" font-weight="bold" fill="white" text-anchor="end" alignment-baseline="central" >STBY</text>
+                <text x="62" y="11" font-size="14" font-weight="bold" fill="#00CC00" text-anchor="start" alignment-baseline="central" >MON</text>
+                <text id="COM1_STBY" x="60" y="29" font-size="28" font-weight="bold" fill="#00CC00" text-anchor="middle" alignment-baseline="central" >121.500</text>
+                <text id="COM1_LABEL_STBY"x="60" y="48" font-size="14" font-weight="bold" fill="white" text-anchor="middle" alignment-baseline="central" >EMERGENCY</text>
+
+            </g>
+            <line x1="123" y1="5" x2="123" y2="55" stroke-width="2" stroke="#666666"></line>
+            
+            <rect x="258" y="1" width="78" height="59" stroke="#666666" fill="black" stroke-width="2" ry="5" rx="5"></rect>
+            <g transform="translate(258,0)">
+                <rect x="3" y="3" width="72" height="55" stroke="black" fill="url(#grad_btn)" stroke-width="2" ry="5" rx="5"></rect>
+                <text x="39" y="29" font-size="18" font-weight="bold" fill="white" text-anchor="middle" alignment-baseline="central" >Audio</text>
+
+            </g>
+
+            <rect x="350" y="1" width="214" height="59" stroke="#666666" fill="black" stroke-width="2" ry="5" rx="5"></rect>
+            <g transform="translate(350,0)">
+                <rect x="3" y="3" width="132" height="55" stroke="black" fill="url(#grad_btn)" stroke-width="2" ry="5" rx="5"></rect>
+                <text x="66" y="16" font-size="18" font-weight="bold" fill="white" text-anchor="middle" alignment-baseline="central" >HB-SGL</text>
+                <text id="XPDR" x="65" y="40" font-size="24" font-weight="bold" fill="#00CC00" text-anchor="end" alignment-baseline="central" >7000</text>
+                <text id="XPDR" x="90" y="40" font-size="16" font-weight="bold" fill="#00CC00" text-anchor="start" alignment-baseline="central" >ALT</text>
+            </g>
+            <line x1="487" y1="5" x2="487" y2="55" stroke-width="2" stroke="#666666"></line>
+            <g transform="translate(487,0)">
+                <rect x="3" y="3" width="72" height="55" stroke="black" fill="url(#grad_btn)" stroke-width="2" ry="5" rx="5"></rect>
+                <text x="40" y="22" font-size="18" font-weight="bold" fill="white" text-anchor="middle" alignment-baseline="central" >IDENT</text>
+                <line x1="10" y1="40" x2="62" y2="40" stroke-width="2" stroke="#666666"></line>
+            </g>
+          
+            <!-- 
+            *******************************************************************
+            LEFT INSTRUMENTS
+            *******************************************************************
+            -->
+
+            <!-- RPM -->
+            <g transform="translate(80,136)">
+                <circle cx="0" cy="0" r="65" stroke="white"></circle>
+                
+                <path d="M -54,26.3 A 60,60,0,0,1,42.5,-42.5" stroke-width="7" stroke="#00FF00"></path>
+                <path d="M 42.5,-42.5 A 60,60,0,0,1,41,-44" stroke-width="14" stroke="#FF0000"></path>
+
+                <path d="M 0,0 L -45,66 L66,66 L66,10 L0,0" fill="black"></path>
+                <g id="rpm">
+                    <circle cx="0" cy="0" r="5" fill="white""></circle>
+                    <path d="M -6,0 L-1,-60 L1,-60 L6,0"  transform="rotate(-145,0,0)" stroke="black" fill="white"></path>
+                </g>
+                <text x="63" y="24" fill="white" font-weight="bold" font-size="14" text-anchor="end">RPM</text>
+                <text id="rpmvalue" x="63" y="45" fill="white" font-weight="bold" font-size="24" text-anchor="end">2900</text>
+
+            </g>
+            <!-- OIL PSI -->
+            <g transform="translate(15,225)">
+                <text x="0" y="-3" fill="white" font-weight="bold" font-size="14" alignment-baseline="central">OIL PSI</text>
+                <text id="oilpsivalue" x="130" y="-3" fill="white" font-weight="bold" font-size="14" text-anchor="end" alignment-baseline="central">50</text>
+
+                <line x1="0" y1="30" x2="130" y2="30" stroke="white"></line>
+                <line x1="29" y1="24" x2="72" y2="24" stroke-width="10" stroke="#00FF00"></line>
+                <path id="oilpsi" d="M0,30 l-0.5,0 l-9.5,-19 l1,-1 l19,0 l1,1 l-9.5,19 l-0.5,0" fill="white" stroke="black"></path>
+                <line x1="0" y1="30" x2="0" y2="13" stroke="red"></line>
+                <line x1="130" y1="30" x2="130" y2="13" stroke="red"></line>
+                <line x1="29" y1="30" x2="29" y2="13" stroke="white"></line>
+                <line x1="72" y1="30" x2="72" y2="13" stroke="white"></line>
+                <line x1="87" y1="30" x2="87" y2="13" stroke="white"></line>
+            </g>
+
+            <!-- OIL TEMP -->
+            <g transform="translate(15,300)">
+                <text x="0" y="-3" fill="white" font-weight="bold" font-size="14" alignment-baseline="central">OIL &deg;F</text>
+                <text id="oilfvalue" x="130" y="-3" fill="white" font-weight="bold" font-size="14" text-anchor="end" alignment-baseline="central">50</text>
+
+                <line x1="0" y1="30" x2="130" y2="30" stroke="white"></line>
+                <line x1="75" y1="24" x2="114" y2="24" stroke-width="10" stroke="#00FF00"></line>
+                <path id="oilf" d="M0,30 l-0.5,0 l-9.5,-19 l1,-1 l19,0 l1,1 l-9.5,19 l-0.5,0" fill="white" stroke="black"></path>
+                <line x1="0" y1="30" x2="0" y2="13" stroke="red"></line>
+                <line x1="130" y1="30" x2="130" y2="13" stroke="red"></line>
+                
+                <line x1="75" y1="30" x2="75" y2="13" stroke="white"></line>
+                <line x1="114" y1="30" x2="114" y2="13" stroke="white"></line>
+                <line x1="16" y1="30" x2="16" y2="13" stroke="white"></line>
+            </g>
+
+            <!-- FUEL PSI -->
+            <g transform="translate(15,375)">
+                <text x="0" y="-3" fill="white" font-weight="bold" font-size="14" alignment-baseline="central">FUEL PSI</text>
+                <text id="fuelpsivalue" x="130" y="-3" fill="white" font-weight="bold" font-size="14" text-anchor="end" alignment-baseline="central">50</text>
+
+                <line x1="0" y1="30" x2="130" y2="30" stroke="white"></line>
+                <path id="fuelpsi" d="M0,30 l-0.5,0 l-9.5,-19 l1,-1 l19,0 l1,1 l-9.5,19 l-0.5,0" fill="white" stroke="black"></path>
+                <line x1="0" y1="30" x2="0" y2="13" stroke="red"></line>
+                <line x1="130" y1="30" x2="130" y2="13" stroke="red"></line>
+
+                <line x1="30" y1="30" x2="30" y2="13" stroke="white"></line>
+                <line x1="60" y1="30" x2="60" y2="13" stroke="white"></line>
+                <line x1="90" y1="30" x2="90" y2="13" stroke="white"></line>
+            </g>
+
+            <!-- VOLTS -->
+            <g transform="translate(15,450)">
+                <rect id="voltsbackground" x="0" y="-10" width="130" height="14" fill="#00FF00"></rect>
+
+                <text id="voltslabel" x="0" y="-3" fill="white" font-weight="bold" font-size="14" alignment-baseline="central">VOLTS</text>
+                <text id="voltsvalue" x="130" y="-3" fill="white" font-weight="bold" font-size="14" text-anchor="end" alignment-baseline="central">50</text>
+
+                <line x1="0" y1="30" x2="130" y2="30" stroke="white"></line>
+                <line x1="0" y1="24" x2="48" y2="24" stroke-width="10" stroke="#FF0000"></line>
+                <line x1="48" y1="24" x2="72" y2="24" stroke-width="10" stroke="#FFFF00"></line>
+                <line x1="72" y1="24" x2="130" y2="24" stroke-width="10" stroke="#00FF00"></line>
+
+                <path id="volts" d="M0,30 l-0.5,0 l-9.5,-19 l1,-1 l19,0 l1,1 l-9.5,19 l-0.5,0" fill="white" stroke="black"></path>
+                <line x1="0" y1="30" x2="0" y2="13" stroke="white"></line>
+                <line x1="130" y1="30" x2="130" y2="13" stroke="red"></line>
+            </g>
+
+            <!-- AMPS -->
+            <g transform="translate(15,525)">
+                <text x="0" y="-3" fill="white" font-weight="bold" font-size="14" alignment-baseline="central">AMPS</text>
+                <text id="ampsvalue" x="130" y="-3" fill="white" font-weight="bold" font-size="14" text-anchor="end" alignment-baseline="central">50</text>
+
+                <line x1="0" y1="30" x2="130" y2="30" stroke="white"></line>
+                <path id="amps" d="M0,30 l-0.5,0 l-9.5,-19 l1,-1 l19,0 l1,1 l-9.5,19 l-0.5,0" fill="white" stroke="black"></path>
+                <line x1="0" y1="30" x2="0" y2="13" stroke="white"></line>
+                <line x1="130" y1="30" x2="130" y2="13" stroke="white"></line>
+            </g>
+
+            <!-- CHT / EGT -->
+            <g transform="translate(15,620)">
+                <text x="0" y="-3" fill="white" font-weight="bold" font-size="14" alignment-baseline="central">CHT &deg;F</text>
+                <text id="chtvalue" x="130" y="-3" fill="white" font-weight="bold" font-size="14" text-anchor="end" alignment-baseline="central">300</text>
+                <text x="0" y="108" fill="white" font-weight="bold" font-size="14" alignment-baseline="central">EGT &deg;F</text>
+                <text id="egtvalue" x="130" y="108" fill="white" font-weight="bold" font-size="14" text-anchor="end" alignment-baseline="central">300</text>
+
+                <line x1="0" y1="10" x2="120" y2="10" stroke="white"></line>
+                
+                <line x1="20" y1="95" x2="130" y2="95" stroke="white"></line>
+                <line x1="0" y1="95" x2="12" y2="95" stroke="white"></line>
+                <line x1="0" y1="10" x2="0" y2="95" stroke="white"></line>
+                <line x1="130" y1="10" x2="130" y2="95" stroke="white"></line>
+                <line x1="5" y1="42" x2="5" y2="60" stroke="#00FF00" stroke-width="10"></line>
+                <line x1="5" y1="36" x2="5" y2="42" stroke="#FFFF00" stroke-width="10"></line>
+                <line x1="1" y1="37" x2="120" y2="37" stroke="#FFFF00" stroke-width="2"></line>
+
+                <line x1="5" y1="33" x2="5" y2="36" stroke="#FF0000" stroke-width="10"></line>
+
+                <!-- EGT -->
+                <line id="C1_EGT" x1="32" y1="95" x2="32" y2="50" stroke-width="15" stroke="#00FF00"></line>
+                <line id="C2_EGT" x1="58" y1="95" x2="58" y2="50" stroke-width="15" stroke="#00FF00"></line>
+                <line id="C3_EGT" x1="84" y1="95" x2="84" y2="50" stroke-width="15" stroke="#00FF00"></line>
+                <line id="C4_EGT" x1="110" y1="95" x2="110" y2="50" stroke-width="15" stroke="#00FF00"></line>
+
+                <!-- CHT -->
+                <rect id="C1_CHT" x="20" y="62" width="24" height="5" stroke-width="2" stroke="#222222" fill="white"></rect>
+                <rect id="C2_CHT" x="46" y="62" width="24" height="5" stroke-width="2" stroke="#222222" fill="white"></rect>
+                <rect id="C3_CHT" x="72" y="62" width="24" height="5" stroke-width="2" stroke="#222222" fill="white"></rect>
+                <rect id="C4_CHT" x="98" y="62" width="24" height="5" stroke-width="2" stroke="#222222" fill="white"></rect>
+                <line x1="0" y1="60" x2="12" y2="60" stroke="white" stroke-width="2"></line>
+                <line x1="0" y1="70" x2="12" y2="70" stroke="white" stroke-width="2"></line>
+
+            </g>
+            <!-- 
+            *******************************************************************
+            LEFT SCREEN
+            *******************************************************************
+            -->
+            
+            <g clip-path="url(#horizon_clip)">
+                
+            <g transform="translate(440,600)" >
+                <g transform="translate(0,-340)">
+                    <g id="horizon" transform="rotate(25,0,0)">
+                        <rect x="-600" y="-600" width="1200" height="1200" fill="url('#grad_sky')"></rect>
+                        <rect x="-600" y="0" width="1200" height="1200" fill="url('#grad_gnd')" />
+                        <line x1="-600" y1="0" x2="600" y2="0" stroke="white"></line>
+                    </g>
+                </g>
+
+               
+
+                <g id="compass">
+
+                    <circle cx="0" cy="0" r="135" fill="black" opacity="0.3"></circle>
+
+
+                    <use href="#compass_line_long" transform="rotate(0,0,0)"></use>
+                    <use href="#compass_line_long" transform="rotate(10,0,0)"></use>
+                    <use href="#compass_line_long" transform="rotate(20,0,0)"></use>
+                    <use href="#compass_line_long" transform="rotate(30,0,0)"></use>
+                    <use href="#compass_line_long" transform="rotate(40,0,0)"></use>
+                    <use href="#compass_line_long" transform="rotate(50,0,0)"></use>
+                    <use href="#compass_line_long" transform="rotate(60,0,0)"></use>
+                    <use href="#compass_line_long" transform="rotate(70,0,0)"></use>
+                    <use href="#compass_line_long" transform="rotate(80,0,0)"></use>
+                    <use href="#compass_line_long" transform="rotate(90,0,0)"></use>
+                    <use href="#compass_line_long" transform="rotate(100,0,0)"></use>
+                    <use href="#compass_line_long" transform="rotate(110,0,0)"></use>
+                    <use href="#compass_line_long" transform="rotate(120,0,0)"></use>
+                    <use href="#compass_line_long" transform="rotate(130,0,0)"></use>
+                    <use href="#compass_line_long" transform="rotate(140,0,0)"></use>
+                    <use href="#compass_line_long" transform="rotate(150,0,0)"></use>
+                    <use href="#compass_line_long" transform="rotate(160,0,0)"></use>
+                    <use href="#compass_line_long" transform="rotate(170,0,0)"></use>
+                    <use href="#compass_line_long" transform="rotate(180,0,0)"></use>
+                    <use href="#compass_line_long" transform="rotate(190,0,0)"></use>
+                    <use href="#compass_line_long" transform="rotate(200,0,0)"></use>
+                    <use href="#compass_line_long" transform="rotate(210,0,0)"></use>
+                    <use href="#compass_line_long" transform="rotate(220,0,0)"></use>
+                    <use href="#compass_line_long" transform="rotate(230,0,0)"></use>
+                    <use href="#compass_line_long" transform="rotate(240,0,0)"></use>
+                    <use href="#compass_line_long" transform="rotate(250,0,0)"></use>
+                    <use href="#compass_line_long" transform="rotate(260,0,0)"></use>
+                    <use href="#compass_line_long" transform="rotate(270,0,0)"></use>
+                    <use href="#compass_line_long" transform="rotate(280,0,0)"></use>
+                    <use href="#compass_line_long" transform="rotate(290,0,0)"></use>
+                    <use href="#compass_line_long" transform="rotate(300,0,0)"></use>
+                    <use href="#compass_line_long" transform="rotate(310,0,0)"></use>
+                    <use href="#compass_line_long" transform="rotate(320,0,0)"></use>
+                    <use href="#compass_line_long" transform="rotate(330,0,0)"></use>
+                    <use href="#compass_line_long" transform="rotate(340,0,0)"></use>
+                    <use href="#compass_line_long" transform="rotate(350,0,0)"></use>
+                
+                    <use href="#compass_line_short" transform="rotate(5,0,0)"></use>
+                    <use href="#compass_line_short" transform="rotate(15,0,0)"></use>
+                    <use href="#compass_line_short" transform="rotate(25,0,0)"></use>
+                    <use href="#compass_line_short" transform="rotate(35,0,0)"></use>
+                    <use href="#compass_line_short" transform="rotate(45,0,0)"></use>
+                    <use href="#compass_line_short" transform="rotate(55,0,0)"></use>
+                    <use href="#compass_line_short" transform="rotate(65,0,0)"></use>
+                    <use href="#compass_line_short" transform="rotate(75,0,0)"></use>
+                    <use href="#compass_line_short" transform="rotate(85,0,0)"></use>
+                    <use href="#compass_line_short" transform="rotate(95,0,0)"></use>
+                    <use href="#compass_line_short" transform="rotate(105,0,0)"></use>
+                    <use href="#compass_line_short" transform="rotate(115,0,0)"></use>
+                    <use href="#compass_line_short" transform="rotate(125,0,0)"></use>
+                    <use href="#compass_line_short" transform="rotate(135,0,0)"></use>
+                    <use href="#compass_line_short" transform="rotate(145,0,0)"></use>
+                    <use href="#compass_line_short" transform="rotate(155,0,0)"></use>
+                    <use href="#compass_line_short" transform="rotate(165,0,0)"></use>
+                    <use href="#compass_line_short" transform="rotate(175,0,0)"></use>
+                    <use href="#compass_line_short" transform="rotate(185,0,0)"></use>
+                    <use href="#compass_line_short" transform="rotate(195,0,0)"></use>
+                    <use href="#compass_line_short" transform="rotate(205,0,0)"></use>
+                    <use href="#compass_line_short" transform="rotate(215,0,0)"></use>
+                    <use href="#compass_line_short" transform="rotate(225,0,0)"></use>
+                    <use href="#compass_line_short" transform="rotate(235,0,0)"></use>
+                    <use href="#compass_line_short" transform="rotate(245,0,0)"></use>
+                    <use href="#compass_line_short" transform="rotate(255,0,0)"></use>
+                    <use href="#compass_line_short" transform="rotate(265,0,0)"></use>
+                    <use href="#compass_line_short" transform="rotate(275,0,0)"></use>
+                    <use href="#compass_line_short" transform="rotate(285,0,0)"></use>
+                    <use href="#compass_line_short" transform="rotate(295,0,0)"></use>
+                    <use href="#compass_line_short" transform="rotate(305,0,0)"></use>
+                    <use href="#compass_line_short" transform="rotate(315,0,0)"></use>
+                    <use href="#compass_line_short" transform="rotate(325,0,0)"></use>
+                    <use href="#compass_line_short" transform="rotate(335,0,0)"></use>
+                    <use href="#compass_line_short" transform="rotate(345,0,0)"></use>
+                    <use href="#compass_line_short" transform="rotate(355,0,0)"></use>
+
+                    <use href="#compass_line_strong" transform="rotate(0,0,0)"></use>
+                    <use href="#compass_line_strong" transform="rotate(30,0,0)"></use>
+                    <use href="#compass_line_strong" transform="rotate(60,0,0)"></use>
+                    <use href="#compass_line_strong" transform="rotate(90,0,0)"></use>
+                    <use href="#compass_line_strong" transform="rotate(120,0,0)"></use>
+                    <use href="#compass_line_strong" transform="rotate(150,0,0)"></use>
+                    <use href="#compass_line_strong" transform="rotate(180,0,0)"></use>
+                    <use href="#compass_line_strong" transform="rotate(210,0,0)"></use>
+                    <use href="#compass_line_strong" transform="rotate(240,0,0)"></use>
+                    <use href="#compass_line_strong" transform="rotate(270,0,0)"></use>
+                    <use href="#compass_line_strong" transform="rotate(300,0,0)"></use>
+                    <use href="#compass_line_strong" transform="rotate(330,0,0)"></use>
+
+                    <circle cx="0" cy="0" r="76" stroke="white" fill="transparent"></circle>
+                    <text id="comp_N" x="0" y="-94" fill="white" font-weight="bold" font-size="24" text-anchor="middle" dominant-baseline="central">N</text>
+                    <text id="comp_E" x="94" y="0" fill="white" font-weight="bold" font-size="24" text-anchor="middle" dominant-baseline="central">E</text>
+                    <text id="comp_S" x="0" y="94" fill="white" font-weight="bold" font-size="24" text-anchor="middle" dominant-baseline="central">S</text>
+                    <text id="comp_W" x="-94" y="0" fill="white" font-weight="bold" font-size="24" text-anchor="middle" dominant-baseline="central">W</text>       
+                    <text id="comp_3" x="47" y="-81.4" fill="white" font-weight="bold" font-size="24" text-anchor="middle" dominant-baseline="central">3</text>
+                    <text id="comp_6" x="81.4" y="-47" fill="white" font-weight="bold" font-size="24" text-anchor="middle" dominant-baseline="central">6</text>
+                    <text id="comp_12" x="81.4" y="47" fill="white" font-weight="bold" font-size="24" text-anchor="middle" dominant-baseline="central">12</text>
+                    <text id="comp_15" x="47" y="81.4" fill="white" font-weight="bold" font-size="24" text-anchor="middle" dominant-baseline="central">15</text>
+                    <text id="comp_21" x="-47" y="81.4" fill="white" font-weight="bold" font-size="24" text-anchor="middle" dominant-baseline="central">21</text>
+                    <text id="comp_24" x="-81.4" y="47" fill="white" font-weight="bold" font-size="24" text-anchor="middle" dominant-baseline="central">24</text>
+                    <text id="comp_30" x="-81.4" y="-47" fill="white" font-weight="bold" font-size="24" text-anchor="middle" dominant-baseline="central">30</text>
+                    <text id="comp_33" x="-47" y="-81.4" fill="white" font-weight="bold" font-size="24" text-anchor="middle" dominant-baseline="central">33</text>
+                </g>
+                <use href="#compass_line_outer" transform="rotate(45,0,0)"></use>
+                <use href="#compass_line_outer" transform="rotate(90,0,0)"></use>
+                <use href="#compass_line_outer" transform="rotate(135,0,0)"></use>
+                <use href="#compass_line_outer" transform="rotate(180,0,0)"></use>
+                <use href="#compass_line_outer" transform="rotate(225,0,0)"></use>
+                <use href="#compass_line_outer" transform="rotate(270,0,0)"></use>
+                <use href="#compass_line_outer" transform="rotate(315,0,0)"></use>
+
+                <use href="#compass_line_outer_thin" transform="rotate(20,0,0)"></use>
+                <use href="#compass_line_outer_thin" transform="rotate(-20,0,0)"></use>
+                <use href="#compass_line_outer_thin" transform="rotate(10,0,0)"></use>
+                <use href="#compass_line_outer_thin" transform="rotate(-10,0,0)"></use>
+
+                <g id="compass_course">
+                    <path d="M-2,115 L-2,-115 L-14,-109 L0,-135 L12,-109 L2,-115 L2,115 L-2,115" stroke="#503030" fill="#F000F0"></path>
+                </g>
+                <!-- Heading Bug -->
+                <g id="hdg_bug">
+                    <path d="M0,-135 l-13,0 l0,-13 l5,0 l8,8 l8,-8 l5,0 l0,13 l-13,0" stroke="black" fill="#00F0F0"></path>
+                </g>
+
+                <!-- Track -->
+                <g>
+                    <rect x="-52" y="-180" width="86" height="29" rx="5" stroke="#808080" fill="black" opacity="0.7"></rect>
+                    <path d="M 0,-154 l-13,0 l13,13 l13,-13 l-13,0" fill="black"></path>
+                    <path d="M 0,-148 l-7,0 l7,7 l7,-7 l-7,0" fill="#F000F0"></path>
+                    <text x="-45" y="-164" font-size="12" fill="#F000F0" font-weight="bold" alignment-baseline="middle">TRK</text>
+                    <text id="trk-text"  x="5" y="-164" font-size="20" fill="#F000F0" font-weight="bold" text-anchor="middle" alignment-baseline="middle">200&deg;</text>
+                </g>
+
+                <!-- Heading -->
+                <g transform="translate(-105,10)">
+                    <rect x="-52" y="-180" width="86" height="29" rx="8" stroke="#808080" fill="black" opacity="0.7"></rect>
+                    <text x="-45" y="-164" font-size="12" fill="white" font-weight="bold" alignment-baseline="middle">HDG</text>
+                    <text id="hdg-text"  x="5" y="-164" font-size="20" fill="#00F0F0" font-weight="bold" text-anchor="middle" alignment-baseline="middle">200&deg;</text>
+                </g>
+                
+                <!-- Course -->
+                <g transform="translate(120,10)">
+                    <rect x="-52" y="-180" width="86" height="29" rx="8" fill="black" opacity="0.7"></rect>
+                    <text x="-45" y="-164" font-size="12" fill="white" font-weight="bold" alignment-baseline="middle">CRS</text>
+                    <text id="crs-text" x="5" y="-164" font-size="20" fill="#F000F0" font-weight="bold" text-anchor="middle" alignment-baseline="middle">200&deg;</text>
+                </g>
+            </g>
+            
+        </g>
+
+        <g transform="translate(169,90)">
+            <path d="M0,30 L0,6 A6,6,90,0,1,6,0 L92,0 A6,6,90,0,1,98,6 L98,329 A6,6,90,0,1,92,335 L6,335 A6,6,90,0,1,0,329 L0,6" fill="black" fill-opacity="0.4" ></path>
+            <path d="M0,30 L0,6 A6,6,-90,0,1,6,0 L92,0 A6,6,90,0,1,98,6 L98,30 L0,30" fill="black" fill-opacity="0.4" ></path>
+            <path d="M98,305 L98,329 A6,6,90,0,1,92,335 L6,335 A6,6,90,0,1,0,329 L0,305" fill="black" fill-opacity="0.4" ></path>
+            <text x="4" y="14" font-size="16" font-weight="bold" fill="#707070" alignment-baseline="central" text-anchor="start">TAS</text>
+            <text id="tas" x="75" y="14" font-size="20" font-weight="bold" fill="white" alignment-baseline="central" text-anchor="end">333</text>
+            <text x="92" y="17" font-size="12" font-weight="bold" fill="white" alignment-baseline="central" text-anchor="end">KT</text>
+            <text x="4" y="320" font-size="16" font-weight="bold" fill="#707070" alignment-baseline="central" text-anchor="start">GS</text>
+            <text id="gs" x="75" y="320" font-size="20" font-weight="bold" fill="#F000F0" alignment-baseline="central" text-anchor="end">333</text>
+            <text x="92" y="323" font-size="12" font-weight="bold" fill="#F000F0" alignment-baseline="central" text-anchor="end">KT</text>
+            <!-- Speed Tape -->
+            <g clip-path="url(#speed_tape_clip)">
+                <g id="as_tape" transform="translate(0,0)">
+                    <line x1="93" y1="170" x2="93" y2="-302" stroke="#00DD00" stroke-width="10"></line>
+                    <line x1="95" y1="170" x2="95" y2="-142" stroke="white" stroke-width="7"></line>
+                    <line x1="93" y1="-302" x2="93" y2="-486" stroke="#DDFF00" stroke-width="10"></line>
+                    <line x1="93" y1="-486" x2="93" y2="-630" stroke="#DD0000" stroke-width="10"></line>
+
+                    <use href="#speed_tape_long" transform="translate(0,170)"></use>
+                    <use href="#speed_tape_short" transform="translate(0,150)"></use>
+                    <use href="#speed_tape_long" transform="translate(0,130)"></use>
+                    <use href="#speed_tape_short" transform="translate(0,110)"></use>
+                    <use href="#speed_tape_long" transform="translate(0,90)"></use>
+                    <use href="#speed_tape_short" transform="translate(0,70)"></use>
+                    <use href="#speed_tape_long" transform="translate(0,50)"></use>
+                    <use href="#speed_tape_short" transform="translate(0,30)"></use>
+                    <use href="#speed_tape_long" transform="translate(0,10)"></use>
+                    <use href="#speed_tape_short" transform="translate(0,-10)"></use>
+                    <use href="#speed_tape_long" transform="translate(0,-30)"></use>
+                    <use href="#speed_tape_short" transform="translate(0,-50)"></use>
+                    <use href="#speed_tape_long" transform="translate(0,-70)"></use>
+                    <use href="#speed_tape_short" transform="translate(0,-90)"></use>
+                    <use href="#speed_tape_long" transform="translate(0,-110)"></use>
+                    <use href="#speed_tape_short" transform="translate(0,-130)"></use>
+                    <use href="#speed_tape_long" transform="translate(0,-150)"></use>
+                    <use href="#speed_tape_short" transform="translate(0,-170)"></use>
+                    <use href="#speed_tape_long" transform="translate(0,-190)"></use>
+                    <use href="#speed_tape_short" transform="translate(0,-210)"></use>
+                    <use href="#speed_tape_long" transform="translate(0,-230)"></use>
+                    <use href="#speed_tape_short" transform="translate(0,-250)"></use>
+                    <use href="#speed_tape_long" transform="translate(0,-270)"></use>
+                    <use href="#speed_tape_short" transform="translate(0,-290)"></use>
+                    <use href="#speed_tape_long" transform="translate(0,-310)"></use>
+                    <use href="#speed_tape_short" transform="translate(0,-330)"></use>
+                    <use href="#speed_tape_long" transform="translate(0,-350)"></use>
+                    <use href="#speed_tape_short" transform="translate(0,-370)"></use>
+                    <use href="#speed_tape_long" transform="translate(0,-390)"></use>
+                    <use href="#speed_tape_short" transform="translate(0,-410)"></use>
+                    <use href="#speed_tape_long" transform="translate(0,-430)"></use>
+                    <use href="#speed_tape_short" transform="translate(0,-450)"></use>
+                    <use href="#speed_tape_long" transform="translate(0,-470)"></use>
+                    <use href="#speed_tape_short" transform="translate(0,-490)"></use>
+                    <use href="#speed_tape_long" transform="translate(0,-510)"></use>
+                    <use href="#speed_tape_short" transform="translate(0,-530)"></use>
+                    <use href="#speed_tape_long" transform="translate(0,-550)"></use>
+                    <use href="#speed_tape_short" transform="translate(0,-570)"></use>
+                    <use href="#speed_tape_long" transform="translate(0,-590)"></use>
+                    <use href="#speed_tape_short" transform="translate(0,-610)"></use>
+                    <use href="#speed_tape_long" transform="translate(0,-630)"></use>
+
+
+                    <text x="75" y="170" font-size="24" font-weight="bold" fill="#CCCCCC" alignment-baseline="central" text-anchor="end">0</text>
+                    <text x="75" y="130" font-size="24" font-weight="bold" fill="#CCCCCC" alignment-baseline="central" text-anchor="end">10</text>
+                    <text x="75" y="90" font-size="24" font-weight="bold" fill="#CCCCCC" alignment-baseline="central" text-anchor="end">20</text>
+                    <text x="75" y="50" font-size="24" font-weight="bold" fill="#CCCCCC" alignment-baseline="central" text-anchor="end">30</text>
+                    <text x="75" y="10" font-size="24" font-weight="bold" fill="#CCCCCC" alignment-baseline="central" text-anchor="end">40</text>
+                    <text x="75" y="-30" font-size="24" font-weight="bold" fill="#CCCCCC" alignment-baseline="central" text-anchor="end">50</text>
+                    <text x="75" y="-70" font-size="24" font-weight="bold" fill="#CCCCCC" alignment-baseline="central" text-anchor="end">60</text>
+                    <text x="75" y="-110" font-size="24" font-weight="bold" fill="#CCCCCC" alignment-baseline="central" text-anchor="end">70</text>
+                    <text x="75" y="-150" font-size="24" font-weight="bold" fill="#CCCCCC" alignment-baseline="central" text-anchor="end">80</text>
+                    <text x="75" y="-190" font-size="24" font-weight="bold" fill="#CCCCCC" alignment-baseline="central" text-anchor="end">90</text>
+                    <text x="75" y="-230" font-size="24" font-weight="bold" fill="#CCCCCC" alignment-baseline="central" text-anchor="end">100</text>
+                    <text x="75" y="-270" font-size="24" font-weight="bold" fill="#CCCCCC" alignment-baseline="central" text-anchor="end">110</text>
+                    <text x="75" y="-310" font-size="24" font-weight="bold" fill="#CCCCCC" alignment-baseline="central" text-anchor="end">120</text>
+                    <text x="75" y="-350" font-size="24" font-weight="bold" fill="#CCCCCC" alignment-baseline="central" text-anchor="end">130</text>
+                    <text x="75" y="-390" font-size="24" font-weight="bold" fill="#CCCCCC" alignment-baseline="central" text-anchor="end">140</text>
+                    <text x="75" y="-430" font-size="24" font-weight="bold" fill="#CCCCCC" alignment-baseline="central" text-anchor="end">150</text>
+                    <text x="75" y="-470" font-size="24" font-weight="bold" fill="#CCCCCC" alignment-baseline="central" text-anchor="end">160</text>
+                    <text x="75" y="-510" font-size="24" font-weight="bold" fill="#CCCCCC" alignment-baseline="central" text-anchor="end">170</text>
+                    <text x="75" y="-550" font-size="24" font-weight="bold" fill="#CCCCCC" alignment-baseline="central" text-anchor="end">180</text>
+                    <text x="75" y="-590" font-size="24" font-weight="bold" fill="#CCCCCC" alignment-baseline="central" text-anchor="end">190</text>
+                    <text x="75" y="-630" font-size="24" font-weight="bold" fill="#CCCCCC" alignment-baseline="central" text-anchor="end">200</text>
+                </g>
+            </g>
+            <!-- speed dials -->
+            <g transform="translate(8,170)">
+                <path d="M0,0 L0,-14 A4,4,90,0,1,4,-18 L54,-18 L54,-32 A4,4,90,0,1,58,-36 L71,-36 A4,4,90,0,1,75,-32 L75,-7 L82,0 L75,7 L75,32 A4,4,90,0,1,71,36 L58,36 A4,4,90,0,1,54,32 L54,18 L4,18 A4,4,90,0,1,0,14 L0,0" fill="black" stroke="#666666"></path>
+                   
+                <g clip-path="url(#speed_dial_clip)">
+                    <g transform="translate(54,0)">
+                        <use id="as_digit1_tape" href="#speed_dial"></use>
+                    </g>
+                    <g transform="translate(34,0)">
+                        <use id="as_digit2_tape" href="#speed_dial"></use>
+                    </g>
+                    <g transform="translate(14,0)">
+                        <use id="as_digit3_tape" href="#speed_dial"></use>
+                    </g>
+                    <rect x="0" y="-35" width="90" height="16" mask="url(#grad_alt_up_fade)"></rect>
+                    <rect x="0" y="20" width="90" height="16" mask="url(#grad_alt_down_fade)"></rect>
+                </g>
+            </g>
+
+        </g>
+        <g transform="translate(591,90)">
+            <path d="M0,30 L0,6 A6,6,90,0,1,6,0 L92,0 A6,6,90,0,1,98,6 L98,329 A6,6,90,0,1,92,335 L6,335 A6,6,90,0,1,0,329 L0,6" fill="black" fill-opacity="0.4" ></path>
+            <path d="M0,30 L0,6 A6,6,-90,0,1,6,0 L92,0 A6,6,90,0,1,98,6 L98,30 L0,30" fill="black" fill-opacity="0.4" stroke="gray"></path>
+            <path d="M98,305 L98,329 A6,6,90,0,1,92,335 L6,335 A6,6,90,0,1,0,329 L0,305 L98,305" fill="black" fill-opacity="0.4" stroke="gray"></path>
+            <text x="75" y="14" font-size="20" font-weight="bold" fill="#00F0F0" alignment-baseline="central" text-anchor="end">5000</text>
+            <text x="92" y="17" font-size="12" font-weight="bold" fill="#00F0F0" alignment-baseline="central" text-anchor="end">FT</text>
+            <text x="72" y="320" font-size="20" font-weight="bold" fill="#00F0F0" alignment-baseline="central" text-anchor="end">1013</text>
+            <text x="92" y="323" font-size="12" font-weight="bold" fill="#00F0F0" alignment-baseline="central" text-anchor="end">MB</text>
+            <!-- Altimeter Tape -->
+            <g clip-path="url(#speed_tape_clip)">
+                <g id="altimeter_tape" transform="translate(0,0)">
+                   
+                    <use href="#altimeter_tape_long" transform="translate(0,410)"></use>
+                    <use href="#altimeter_tape_short" transform="translate(0,398)"></use>
+                    <use href="#altimeter_tape_short" transform="translate(0,386)"></use>
+                    <use href="#altimeter_tape_short" transform="translate(0,374)"></use>
+                    <use href="#altimeter_tape_short" transform="translate(0,362)"></use>
+                    <use href="#altimeter_tape_long" transform="translate(0,350)"></use>
+                    <use href="#altimeter_tape_short" transform="translate(0,338)"></use>
+                    <use href="#altimeter_tape_short" transform="translate(0,326)"></use>
+                    <use href="#altimeter_tape_short" transform="translate(0,314)"></use>
+                    <use href="#altimeter_tape_short" transform="translate(0,302)"></use>
+
+                    <use href="#altimeter_tape_long" transform="translate(0,290)"></use>
+                    <use href="#altimeter_tape_short" transform="translate(0,278)"></use>
+                    <use href="#altimeter_tape_short" transform="translate(0,266)"></use>
+                    <use href="#altimeter_tape_short" transform="translate(0,254)"></use>
+                    <use href="#altimeter_tape_short" transform="translate(0,242)"></use>
+                    <use href="#altimeter_tape_long" transform="translate(0,230)"></use>
+                    <use href="#altimeter_tape_short" transform="translate(0,218)"></use>
+                    <use href="#altimeter_tape_short" transform="translate(0,206)"></use>
+                    <use href="#altimeter_tape_short" transform="translate(0,194)"></use>
+                    <use href="#altimeter_tape_short" transform="translate(0,182)"></use>
+                    
+                    
+                    <use href="#altimeter_tape_long" transform="translate(0,170)"></use>
+                    <use href="#altimeter_tape_short" transform="translate(0,158)"></use>
+                    <use href="#altimeter_tape_short" transform="translate(0,146)"></use>
+                    <use href="#altimeter_tape_short" transform="translate(0,134)"></use>
+                    <use href="#altimeter_tape_short" transform="translate(0,122)"></use>
+                    <use href="#altimeter_tape_long" transform="translate(0,110)"></use>
+                    <use href="#altimeter_tape_short" transform="translate(0,98)"></use>
+                    <use href="#altimeter_tape_short" transform="translate(0,86)"></use>
+                    <use href="#altimeter_tape_short" transform="translate(0,74)"></use>
+                    <use href="#altimeter_tape_short" transform="translate(0,62)"></use>
+                    <use href="#altimeter_tape_long" transform="translate(0,50)"></use>
+                    <use href="#altimeter_tape_short" transform="translate(0,38)"></use>
+                    <use href="#altimeter_tape_short" transform="translate(0,26)"></use>
+                    <use href="#altimeter_tape_short" transform="translate(0,14)"></use>
+                    <use href="#altimeter_tape_short" transform="translate(0,2)"></use>
+                    <use href="#altimeter_tape_long" transform="translate(0,-10)"></use>
+                    <use href="#altimeter_tape_short" transform="translate(0,-22)"></use>
+                    <use href="#altimeter_tape_short" transform="translate(0,-34)"></use>
+                    <use href="#altimeter_tape_short" transform="translate(0,-46)"></use>
+                    <use href="#altimeter_tape_short" transform="translate(0,-58)"></use>
+                    <use href="#altimeter_tape_long" transform="translate(0,-70)"></use>
+
+
+                    <text id="alt_upper_3t" x="34" y="-10" font-size="24" font-weight="bold" fill="#CCCCCC" alignment-baseline="central" text-anchor="end">5</text>
+                    <text id="alt_upper_3" x="34" y="-10" font-size="20" font-weight="bold" fill="#CCCCCC" alignment-baseline="central" text-anchor="start">300</text>
+                    <text id="alt_upper_2t" x="34" y="50" font-size="24" font-weight="bold" fill="#CCCCCC" alignment-baseline="central" text-anchor="end">5</text>
+                    <text id="alt_upper_2" x="34" y="50" font-size="20" font-weight="bold" fill="#CCCCCC" alignment-baseline="central" text-anchor="start">200</text>
+                    <text id="alt_upper_1t" x="34" y="110" font-size="24" font-weight="bold" fill="#CCCCCC" alignment-baseline="central" text-anchor="end">5</text>
+                    <text id="alt_upper_1" x="34" y="110" font-size="20" font-weight="bold" fill="#CCCCCC" alignment-baseline="central" text-anchor="start">100</text>
+                    <text id="alt_centert" x="34" y="170" font-size="24" font-weight="bold" fill="#CCCCCC" alignment-baseline="central" text-anchor="end">5</text>
+                    <text id="alt_center" x="34" y="170" font-size="20" font-weight="bold" fill="#CCCCCC" alignment-baseline="central" text-anchor="start">000</text>
+                    <text id="alt_lower_1t" x="34" y="230" font-size="24" font-weight="bold" fill="#CCCCCC" alignment-baseline="central" text-anchor="end">4</text>
+                    <text id="alt_lower_1" x="34" y="230" font-size="20" font-weight="bold" fill="#CCCCCC" alignment-baseline="central" text-anchor="start">900</text>
+                    <text id="alt_lower_2t" x="34" y="290" font-size="24" font-weight="bold" fill="#CCCCCC" alignment-baseline="central" text-anchor="end">4</text>
+                    <text id="alt_lower_2" x="34" y="290" font-size="20" font-weight="bold" fill="#CCCCCC" alignment-baseline="central" text-anchor="start">800</text>
+                    <text id="alt_lower_3t" x="34" y="350" font-size="24" font-weight="bold" fill="#CCCCCC" alignment-baseline="central" text-anchor="end">4</text>
+                    <text id="alt_lower_3" x="34" y="350" font-size="20" font-weight="bold" fill="#CCCCCC" alignment-baseline="central" text-anchor="end">700</text>
+                </g>
+            </g> 
+                 
+            <!-- altimeter dials -->
+            <g transform="translate(5,170)">
+                <path d="M0,0 L7,-7 L7,-14 A4,4,90,0,1,11,-17 L58,-17 L58,-26 A4,4,90,0,1,62,-30 L84,-30 A4,4,90,0,1,88,-26 L88,26 A4,4,90,0,1,84,30 L62,30 A4,4,90,0,1,58,26 L58,17 L11,17 A4,4,90,0,1,7,14 L7,7 L0,0" fill="black" stroke="#666666"></path>         
+                <g clip-path="url(#altimeter_dial_clip)">
+                    <g transform="translate(60,0)">
+                        
+                        <use id="digit12_tape" href="#altimeter_dial_double"></use>
+                    </g>
+                    <g transform="translate(45,0)">
+                        <use id="digit3_tape" href="#altimeter_dial_small"></use>
+                    </g>
+                    <g transform="translate(26,0)">
+                        <use id="digit4_tape" href="#altimeter_dial_large"></use>
+                    </g>
+                    <g transform="translate(6,0)">
+                        <use id="digit5_tape" href="#altimeter_dial_large"></use>
+                    </g>
+                    <rect x="0" y="-30" width="90" height="16" mask="url(#grad_alt_up_fade)"></rect>
+                    <rect x="0" y="15" width="90" height="16" mask="url(#grad_alt_down_fade)"></rect>
+                </g>
+                
+            </g>
+
+            <!-- VSI -->
+            <g transform="translate(98,170)">
+                <path d="M10,5 L16,8 A8,3,55,0,1,24,19 L24,125 A4,4,-90,0,1,21,128 L0,128 L0,0" fill="black" opacity="0.6"></path>
+                <path d="M10,-5 L16,-8 A8,-3,-55,0,0,24,-19 L24,-125 A4,4,-90,0,0,21,-128 L0,-128 L0,0" fill="black" opacity="0.6"></path>
+
+                <line x1="0" y1="-121" x2="0" y2="121" stroke="#CCCCCC" stroke-width="2"></line>
+                <line x1="0" y1="-120" x2="8" y2="-120" stroke="#CCCCCC" stroke-width="2"></line>
+                <line x1="0" y1="-105" x2="8" y2="-105" stroke="#CCCCCC" stroke-width="2"></line>
+                <line x1="0" y1="-90" x2="8" y2="-90" stroke="#CCCCCC" stroke-width="2"></line>
+                <line x1="0" y1="-81" x2="4" y2="-81" stroke="#CCCCCC" stroke-width="2"></line>
+                <line x1="0" y1="-72" x2="4" y2="-72" stroke="#CCCCCC" stroke-width="2"></line>
+                <line x1="0" y1="-63" x2="4" y2="-63" stroke="#CCCCCC" stroke-width="2"></line>
+                <line x1="0" y1="-54" x2="4" y2="-54" stroke="#CCCCCC" stroke-width="2"></line>
+                <line x1="0" y1="-45" x2="8" y2="-45" stroke="#CCCCCC" stroke-width="2"></line>
+                <line x1="0" y1="-36" x2="4" y2="-36" stroke="#CCCCCC" stroke-width="2"></line>
+                <line x1="0" y1="-27" x2="4" y2="-27" stroke="#CCCCCC" stroke-width="2"></line>
+                <line x1="0" y1="-18" x2="4" y2="-18" stroke="#CCCCCC" stroke-width="2"></line>
+                <line x1="0" y1="-9" x2="4" y2="-9" stroke="#CCCCCC" stroke-width="2"></line>
+                <line x1="0" y1="9" x2="4" y2="9" stroke="#CCCCCC" stroke-width="2"></line>
+                <line x1="0" y1="18" x2="4" y2="18" stroke="#CCCCCC" stroke-width="2"></line>
+                <line x1="0" y1="27" x2="4" y2="27" stroke="#CCCCCC" stroke-width="2"></line>
+                <line x1="0" y1="36" x2="4" y2="36" stroke="#CCCCCC" stroke-width="2"></line>
+                <line x1="0" y1="45" x2="8" y2="45" stroke="#CCCCCC" stroke-width="2"></line>
+                <line x1="0" y1="54" x2="4" y2="54" stroke="#CCCCCC" stroke-width="2"></line>
+                <line x1="0" y1="63" x2="4" y2="63" stroke="#CCCCCC" stroke-width="2"></line>
+                <line x1="0" y1="72" x2="4" y2="72" stroke="#CCCCCC" stroke-width="2"></line>
+                <line x1="0" y1="81" x2="4" y2="81" stroke="#CCCCCC" stroke-width="2"></line>
+                <line x1="0" y1="90" x2="8" y2="90" stroke="#CCCCCC" stroke-width="2"></line>
+                <line x1="0" y1="105" x2="8" y2="105" stroke="#CCCCCC" stroke-width="2"></line>
+                <line x1="0" y1="120" x2="8" y2="120" stroke="#CCCCCC" stroke-width="2"></line>
+                <text x="10" y="-45" fill="#CCCCCC" font-size="12" font-weight="bold" alignment-baseline="middle">.5</text>
+                <text x="10" y="45" fill="#CCCCCC" font-size="12" font-weight="bold" alignment-baseline="middle">.5</text>
+                <text x="10" y="-90" fill="#CCCCCC" font-size="16" font-weight="bold" alignment-baseline="middle">1</text>
+                <text x="10" y="90" fill="#CCCCCC" font-size="16" font-weight="bold" alignment-baseline="middle">1</text>
+                <text x="10" y="-120" fill="#CCCCCC" font-size="16" font-weight="bold" alignment-baseline="middle">2</text>
+                <text x="10" y="120" fill="#CCCCCC" font-size="16" font-weight="bold" alignment-baseline="middle">2</text>
+                <line x1="0" y1="0" x2="14" y2="-7" stroke="#CCCCCC" stroke-width="2"></line>
+                <line x1="0" y1="0" x2="14" y2="7" stroke="#CCCCCC" stroke-width="2"></line>
+                <g id="vsi">
+                    <path d="M4,0 L20,-8 L20,8 L4,0" stroke="black" fill="white" stroke-width="2"></path>
+                    <line x1="0" y1="0" x2="6" y2="3" stroke="#F000F0" stroke-width="2"></line>
+                    <line x1="0" y1="0" x2="6" y2="-3" stroke="#F000F0" stroke-width="2"></line>
+
+                </g>
+            </g>
+        </g>
+        <!-- Pitch & Bank-->
+        <g transform="translate(440,260)">
+            <g id="bank_indicator" transform="rotate(25,0,0)" >
+                <path d="M-108,-63 A125,125,120,0,1,108,-63" stroke="white" stroke-width="2" fill="transparent"></path>
+                <use href="#bank_line_long" transform="rotate(-60,0,0)"></use>
+                <use href="#bank_line_long" transform="rotate(-30,0,0)"></use>
+                <use href="#bank_line_long" transform="rotate(0,0,0)"></use>
+                <use href="#bank_line_long" transform="rotate(30,0,0)"></use>
+                <use href="#bank_line_long" transform="rotate(60,0,0)"></use>
+                <use href="#bank_line_short" transform="rotate(-45,0,0)"></use>
+                <use href="#bank_line_short" transform="rotate(-20,0,0)"></use>
+                <use href="#bank_line_short" transform="rotate(-10,0,0)"></use>
+                <use href="#bank_line_short" transform="rotate(10,0,0)"></use>
+                <use href="#bank_line_short" transform="rotate(20,0,0)"></use>
+                <use href="#bank_line_short" transform="rotate(45,0,0)"></use>
+                <path d="M0,-125 l-8,-16 l16,0 l-8,16" fill="white"></path>
+                <g clip-path="url(#pitch_clip)">
+                    <g id="pitch" >
+                        <g > <!-- mask="url(#pitchFadeMask)" -->
+                        <use href="#attitude_line_long" transform="translate(0,-288)"></use>
+                        <use href="#attitude_line_short" transform="translate(0,-252)"></use>
+                        <use href="#attitude_line_long" transform="translate(0,-216)"></use>
+                        <use href="#attitude_line_short" transform="translate(0,-180)"></use>
+                        <use href="#attitude_line_long" transform="translate(0,-144)"></use>
+                        <use href="#attitude_line_short" transform="translate(0,-108)"></use>
+                        <use href="#attitude_line_long" transform="translate(0,-72)"></use>
+                        <use href="#attitude_line_short" transform="translate(0,-36)"></use>
+                        <use href="#attitude_line_long" transform="translate(0,0)"></use>
+                        <use href="#attitude_line_short" transform="translate(0,36)"></use>
+                        <use href="#attitude_line_long" transform="translate(0,72)"></use>
+                        <use href="#attitude_line_short" transform="translate(0,108)"></use>
+                        <use href="#attitude_line_long" transform="translate(0,144)"></use>
+                        <use href="#attitude_line_short" transform="translate(0,180)"></use>
+                        <use href="#attitude_line_long" transform="translate(0,216)"></use>
+                        <use href="#attitude_line_short" transform="translate(0,252)"></use>
+                        <use href="#attitude_line_long" transform="translate(0,288)"></use>
+                        
+                        <text x="-25" y="-72" fill="white" stroke="black" font-size="20" font-weight="bold" alignment-baseline="central" text-anchor="end">5</text>
+                        <text x="25" y="-72" fill="white" stroke="black" font-size="20" font-weight="bold" alignment-baseline="central" text-anchor="start">5</text>
+                        <text x="-25" y="72" fill="white" stroke="black" font-size="20" font-weight="bold" alignment-baseline="central" text-anchor="end">5</text>
+                        <text x="25" y="72" fill="white" stroke="black" font-size="20" font-weight="bold" alignment-baseline="central" text-anchor="start">5</text>
+
+                        <text x="-25" y="-144" fill="white" stroke="black" font-size="20" font-weight="bold" alignment-baseline="central" text-anchor="end">10</text>
+                        <text x="25" y="-144" fill="white" stroke="black" font-size="20" font-weight="bold" alignment-baseline="central" text-anchor="start">10</text>
+                        <text x="-25" y="144" fill="white" stroke="black" font-size="20" font-weight="bold" alignment-baseline="central" text-anchor="end">10</text>
+                        <text x="25" y="144" fill="white" stroke="black" font-size="20" font-weight="bold" alignment-baseline="central" text-anchor="start">10</text>
+                        
+                        <text x="-25" y="-216" fill="white" stroke="black" font-size="20" font-weight="bold" alignment-baseline="central" text-anchor="end">15</text>
+                        <text x="25" y="-216" fill="white" stroke="black" font-size="20" font-weight="bold" alignment-baseline="central" text-anchor="start">15</text>
+                        <text x="-25" y="216" fill="white" stroke="black" font-size="20" font-weight="bold" alignment-baseline="central" text-anchor="end">15</text>
+                        <text x="25" y="216" fill="white" stroke="black" font-size="20" font-weight="bold" alignment-baseline="central" text-anchor="start">15</text>
+
+                        <text x="-25" y="-288" fill="white" stroke="black" font-size="20" font-weight="bold" alignment-baseline="central" text-anchor="end">20</text>
+                        <text x="25" y="-288" fill="white" stroke="black" font-size="20" font-weight="bold" alignment-baseline="central" text-anchor="start">20</text>
+                        <text x="-25" y="288" fill="white" stroke="black" font-size="20" font-weight="bold" alignment-baseline="central" text-anchor="end">20</text>
+                        <text x="25" y="288" fill="white" stroke="black" font-size="20" font-weight="bold" alignment-baseline="central" text-anchor="start">20</text>
+                    </g>
+                    </g>
+                </g>
+            </g>
+            <path d="M0,-125 l-8,16 l16,0 l-8,-16" fill="white"></path>
+            <!-- Arrow Symbols -->
+            <circle r="12" cx="0" cy="0" stroke="#00DD00" stroke-width="2" fill="transparent" ></circle>
+            <line x1="-12" y1="0" x2="-22" y2="0" stroke-width="2" stroke="#00DD00"></line>
+            <line x1="12" y1="0" x2="22" y2="0" stroke-width="2" stroke="#00DD00"></line>
+            <line x1="0" y1="-12" x2="0" y2="-22" stroke-width="2" stroke="#00DD00"></line>
+            <line x1="0" y1="12" x2="0" y2="22" stroke-width="2" stroke="#00DD00"></line>
+
+            <g>
+                <path d="M-85,25 L0,0 L-65,25 L-85,25" stroke="black" fill="#c0c020"></path>
+                <path d="M-65,25 L0,0 L-40,25 L-65,25" stroke="black" fill="#656520"></path>
+                <path d="M85,25 L0,0 L65,25 L85,25" stroke="black" fill="#c0c020"></path>
+                <path d="M65,25 L0,0 L40,25 L65,25" stroke="black" fill="#656520"></path>
+            </g>
+
+            <!-- Slip/Skid Indicator -->
+            <g transform="translate(0,100)">
+                <rect x="-80" y="0" width="160" height="30" fill="black" opacity="0.4" rx="10" ry="10" ></rect>
+                <circle id="ball" cx="0" cy="15" r="12" stroke="black" stroke-width="2" fill="white"></circle>
+                <rect x="-19" y="1" rx="2" ry="2" width="5" height="28" stroke-width="2" stroke="black" fill="white"></rect>
+                <rect x="14" y="1" rx="2" ry="2" width="5" height="28" stroke-width="2" stroke="black" fill="white"></rect>
+            
+            </g>
+        </g>
+        <!-- 
+        *******************************************************************
+        RIGHT SCREEN
+        *******************************************************************
+        -->
+        <!-- MAP Overlay -->
+        <g transform="translate(760,120)">
+            <path id="northpointer" d="M0,0 l-16,8 l    16,-42 l16,42 l-16,-8" stroke="black" stroke-width="2" fill="white"></path>
+            <text id="northpointertext" x="0" y="-10" alignment-baseline="central" text-anchor="middle" fill="black">N</text>
+        </g>
+        
+        <!--    
+        *******************************************************************
+        BOTTOM SCREEN
+        *******************************************************************
+        -->
+        <g transform="translate(0,777)">
+            <rect x="0" y="0" width="385" height="22" stroke="#666666" fill="black" stroke-width="2" ry="2" rx="2"></rect>
+            <rect x="2" y="2" width="381" height="18" stroke="black" fill="url(#grad_btn)" stroke-width="2" ry="2" rx="2"></rect>
+            <text x="5" y="11" fill="white" font-weight="bold" font-size="16" alignment-baseline="central" text-anchor="start">Heading</text>   
+            <line x1="71" y1="11" x2="80" y2="11" stroke-width="2" stroke="#5577DD"></line>
+            <circle cx="80" cy="11" r="3" fill="#5577DD"></circle>
+            <path d="M75,8 A6,6,240,1,1,75,14" stroke-width="2" stroke="#5577DD" fill="transparent"></path>
+            <line x1="86" y1="11" x2="93" y2="11" stroke-width="2" stroke="#5577DD"></line>
+            <text x="95" y="11" fill="white" font-weight="bold" font-size="16" alignment-baseline="central" text-anchor="start">Altitude</text>   
+        </g>
+        <g transform="translate(385,777)">
+            <rect x="0" y="0" width="100" height="22" stroke="#666666" fill="black" stroke-width="2" ry="2" rx="2"></rect>
+            <rect x="2" y="2" width="96" height="18" stroke="black" fill="url(#grad_btn)" stroke-width="2" ry="2" rx="2"></rect>
+            <text x="5" y="11" fill="white" font-weight="bold" font-size="16" alignment-baseline="central" text-anchor="start">TMR</text>   
+            <text x="95" y="11" fill="white" font-weight="bold" font-size="16" alignment-baseline="central" text-anchor="end">00:00</text>   
+        </g>
+        <g transform="translate(485,777)">
+            <rect x="0" y="0" width="100" height="22" stroke="#666666" fill="black" stroke-width="2" ry="2" rx="2"></rect>
+            <rect x="2" y="2" width="96" height="18" stroke="black" fill="url(#grad_btn)" stroke-width="2" ry="2" rx="2"></rect>
+            <text x="5" y="11" fill="white" font-weight="bold" font-size="16" alignment-baseline="central" text-anchor="start">OAT</text>   
+            <text id="oat" x="95" y="11" fill="white" font-weight="bold" font-size="16" alignment-baseline="central" text-anchor="end">23 &deg;C</text>   
+        </g>
+        <g transform="translate(585,777)">
+            <rect x="0" y="0" width="136" height="22" stroke="#666666" fill="black" stroke-width="2" ry="2" rx="2"></rect>
+            <rect x="2" y="2" width="132" height="18" stroke="black" fill="url(#grad_btn)" stroke-width="2" ry="2" rx="2"></rect>
+            <text x="5" y="11" fill="white" font-weight="bold" font-size="16" alignment-baseline="central" text-anchor="start">LCL</text>   
+            <text id="time" x="132" y="11" fill="white" font-weight="bold" font-size="16" alignment-baseline="central" text-anchor="end">08:00:30am</text>   
+        </g>
+        <g transform="translate(721,777)">
+            <rect x="0" y="0" width="559" height="22" stroke="#666666" fill="black" stroke-width="2" ry="2" rx="2"></rect>
+            <rect x="2" y="2" width="555" height="18" stroke="black" fill="url(#grad_btn)" stroke-width="2" ry="2" rx="2"></rect>
+        </g>
+       
+        </svg>
+    </div>   
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+   integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+   crossorigin=""></script>
+	
+   <script src="https://unpkg.com/leaflet-rotate@0.1.4/dist/leaflet-rotate-src.js"></script>
+
+    <script>
+
+        var pitch = -0.0;
+        var roll = 0;
+        var map = L.map('map', {rotate:true,  zoomControl: false, rotateControl:false, attributionControl: true}).setView([47.078733, 9.064843], 11);
+        var lat = 47;
+        var long = 9;
+        map.attributionControl.addAttribution("OpenFlightMaps");
+        L.tileLayer('./map/{z}/{x}/{y}.png', {
+            maxZoom: 11,
+        }).addTo(map);
+
+        setHdgBug(0);
+        updateCompassCourse(0);
+        
+
+
+        function updateRollAndPitch() {
+            pitchbar = document.getElementById('pitch');
+            bank_indicator = document.getElementById('bank_indicator');
+            horizon = document.getElementById('horizon');
+
+            pitchbar.setAttribute("transform", "translate(0," + 14.5 * pitch + ")");
+            bank_indicator.setAttribute("transform", "rotate(" + this.roll + ",0,0)  ");
+            horizon.setAttribute("transform", "rotate(" + this.roll + ",0,0)  translate(0," + 14.5 * pitch + ")");
+        }
+
+        setTimeout(
+            function() {
+                connectSim();
+            }, 
+            2000 // 2 second delay
+        );
+
+        
+        function connectSim() {
+            var ws = new WebSocket('ws://localhost:8080/ws')
+            ws.onopen = function (ev) {
+          
+            }
+            ws.onmessage = function (ev) {
+                try {
+                    var data = JSON.parse(ev.data);
+                    if (data.name == "indicated-altitude-ft") {
+                        setAltitude(data.value);
+                    }
+                    else if (data.name == "indicated-roll-deg") {
+                        setRoll(data.value);
+                        updateRollAndPitch();
+                    }
+                    else if (data.name == "indicated-pitch-deg") {
+                        setPitch(data.value);
+                        updateRollAndPitch();
+                    }
+                    else if (data.name == "setting-hpa") {
+                        //updateQNH(data.value);
+                    }
+                    else if (data.name == "groundspeed-kt") {
+                        setGS(data.value);
+                    }
+                    else if (data.name == "temperature-degc") {
+                        setOAT(data.value);
+                    }
+                    else if (data.name == "true-speed-kt") {
+                        setTAS(data.value);
+                    }
+                    else if (data.name == "indicated-speed-kt") {
+                        setIAS(data.value);
+                    }
+                    else if (data.name == "latitude-deg") {
+                        setLat(data.value);
+                        updateMap();
+                    }
+                    else if (data.name == "longitude-deg") {
+                        setLong(data.value);
+                        updateMap();
+                    }
+                    else if (data.name == "indicated-track-true-deg") {
+                        updateMapOrientation(data.value);
+                    }
+                    
+                    else if (data.name == "indicated-heading-deg") {
+                        updateCompass(data.value);
+                    }
+                    else if (data.name == "rpm") {
+                        updateRPM(data.value);
+                    }
+                    
+                    else if (data.name == "oil-pressure-psi") {
+                        setOilPSI(data.value);
+                    }
+                    
+                    else if (data.name == "oil-temperature-degf") {
+                        setOilF(data.value);
+                    }
+                    else if (data.name == "cht-degf") {
+                        setCHT(data.value);
+                    }
+                    else if (data.name == "egt-degf") {
+                        setEGT(data.value);
+                    }
+                    
+                    else if (data.name == "indicated-speed-fpm") {
+                        setVSI(data.value);
+                    }
+                    
+                    else if (data.name == "volts") {
+                        setVolts(data.value / 2);
+                    }
+                    else if (data.name == "amps") {
+                        setAmps(data.value);
+                    }
+                    else if (data.name == "gmt-string") {
+                        setTime(data.value);
+                    }
+                    debugger;
+                  
+                } catch (e) {
+                    console.log('Exception in onmessage:' + e)
+                }
+            }
+            ws.onclose = function (ev) {
+                var msg = 'Lost connection to FlightGear.'
+                console.log(msg);
+            }
+
+            ws.onerror = function (ev) {
+                var msg = 'Error communicating with FlightGear.'
+                console.log(msg);
+            }
+        }
+
+        function setRoll(val) {
+            this.roll = -val;
+        }
+
+        function setPitch(val) {
+            this.pitch = val;
+        }
+
+        function setLat(val) {
+            this.lat = val;
+        }
+        function setLong(val) {
+            this.long = val;
+        }
+
+        function updateRPM(val) {
+
+            if(val < 300) {
+                val = 0;
+            }
+            c = document.getElementById('rpm');
+            
+            c.setAttribute("transform", "rotate(" + (211)*(val-300)/2800 + ",0,0)");
+            c = document.getElementById('rpmvalue');
+            c.innerHTML = Math.round(val);
+        
+        }
+
+        function setVSI(value) {
+            c = document.getElementById('vsi');
+            if(value >= -1000 && value <=1000) {
+                valpx = value * 9 / 100;
+            }
+            else if(value > 1000) {
+                valpx = ((value - 1000) * 3 / 100) + 90;
+            }
+            else {
+                valpx = ((value + 1000) * 3 / 100) - 90;
+            }
+            c.setAttribute("transform", "translate(0," + (-1)*(valpx) + ")");
+        }
+
+
+        function setOilPSI(val) {
+            if(val < 10) {
+                c = document.getElementById('oilpsi');
+                c.setAttribute("transform", "translate(0,0)");
+           
+            } else {
+                c = document.getElementById('oilpsi');
+                c.setAttribute("transform", "translate(" + (val-10)/90*130 + ",0)");
+            }
+            c = document.getElementById('oilpsivalue');
+            c.innerHTML = Math.round(val);
+
+        }
+
+        function setFuelPSI(val) {
+            if(val < 3.5) {
+                c = document.getElementById('fuelpsi');
+                c.setAttribute("transform", "translate(0,0)");
+           
+            } else {
+                c = document.getElementById('fuelpsi');
+                c.setAttribute("transform", "translate(" + (val - 3.5)*10 + ",0)");
+            }
+            c = document.getElementById('fuelpsivalue');
+            c.innerHTML = Math.round(val*10)/10;
+
+        }
+
+        function setOilF(val) {
+            if(val < 75) {
+                c = document.getElementById('oilf');
+                c.setAttribute("transform", "translate(0,0)");
+           
+            } else {
+                c = document.getElementById('oilf');
+                c.setAttribute("transform", "translate(" + (val-75)/165*130 + ",0)");
+            }
+            c = document.getElementById('oilfvalue');
+            c.innerHTML = Math.round(val);
+
+        }
+
+        function setVolts(val) {
+            if(val < 11) {
+                c = document.getElementById('volts');
+                c.setAttribute("transform", "translate(0,0)");
+                c = document.getElementById('voltsbackground');
+                c.setAttribute("fill", "#FF0000");
+                c = document.getElementById('voltslabel');
+                c.setAttribute("fill", "black");
+                c = document.getElementById('voltsvalue');
+                c.setAttribute("fill", "black");
+           
+            } else if(val >=11 && val < 12.5) {
+                c = document.getElementById('voltsbackground');
+                c.setAttribute("fill", "#FFFF00");
+                c = document.getElementById('voltslabel');
+                c.setAttribute("fill", "black");
+                c = document.getElementById('voltsvalue');
+                c.setAttribute("fill", "black");
+                c = document.getElementById('volts');
+                c.setAttribute("transform", "translate(" + (val-8)/8.1*130 + ",0)");
+            } else {
+                c = document.getElementById('voltsbackground');
+                c.setAttribute("fill", "black");
+                c = document.getElementById('voltslabel');
+                c.setAttribute("fill", "white");
+                c = document.getElementById('voltsvalue');
+                c.setAttribute("fill", "white");
+                c = document.getElementById('volts');
+                c.setAttribute("transform", "translate(" + (val-8)/8.1*130 + ",0)");
+            }
+            c = document.getElementById('voltsvalue');
+            c.innerHTML = Math.round(val*10)/10;
+
+        }
+
+
+        function setAmps(val) {
+            if(val < -60) {
+                c = document.getElementById('amps');
+                c.setAttribute("transform", "translate(0,0)");
+           
+            } else {
+                c = document.getElementById('amps');
+                c.setAttribute("transform", "translate(" + (val+60)/120*130 + ",0)");
+            }
+            c = document.getElementById('ampsvalue');
+            
+            if(val > 0) {
+                c.innerHTML = '+' + Math.round(val);
+            }
+            else {
+                c.innerHTML = Math.round(val);
+            }
+
+        }
+
+        function setHdgBug(val) {
+            c = document.getElementById('hdg_bug');
+            c.setAttribute("transform", "rotate(" + (-1)*val + ",0,0)");
+            c = document.getElementById('hdg-text');
+            c.innerHTML = ('000' + Math.round(-val)).substr(-3)+"&deg;";
+
+        }
+
+        function updateCompassCourse(val) {
+            c = document.getElementById('compass_course');
+            c.setAttribute("transform", "rotate(" + (-1)*val + ",0,0)");
+            c = document.getElementById('crs-text');
+            c.innerHTML = ('000' + Math.round(-val)).substr(-3)+"&deg;";
+        }
+
+        function updateCompass(val) {
+            c = document.getElementById('compass');
+            c.setAttribute("transform", "rotate(" + (-1)*val + ",0,0)");
+            c = document.getElementById('comp_N');
+            c.setAttribute("transform", "rotate(" + val + ",0,-94)");
+            c = document.getElementById('comp_E');
+            c.setAttribute("transform", "rotate(" + val + ",94,0)");
+            c = document.getElementById('comp_S');
+            c.setAttribute("transform", "rotate(" + val + ",0,94)");
+            c = document.getElementById('comp_W');
+            c.setAttribute("transform", "rotate(" + val + ",-94,0)");
+
+            c = document.getElementById('comp_3');
+            c.setAttribute("transform", "rotate(" + val + ",47,-81.4)");
+            c = document.getElementById('comp_6');
+            c.setAttribute("transform", "rotate(" + val + ",81.4,-47)");
+            c = document.getElementById('comp_12');
+            c.setAttribute("transform", "rotate(" + val + ",81.4,47)");
+            c = document.getElementById('comp_15');
+            c.setAttribute("transform", "rotate(" + val + ",47,81.4)");
+            c = document.getElementById('comp_21');
+            c.setAttribute("transform", "rotate(" + val + ",-47,81.4)");
+            c = document.getElementById('comp_24');
+            c.setAttribute("transform", "rotate(" + val + ",-81.4,47)");
+            c = document.getElementById('comp_30');
+            c.setAttribute("transform", "rotate(" + val + ",-81.4,-47)");
+            c = document.getElementById('comp_33');
+            c.setAttribute("transform", "rotate(" + val + ",-47,-81.4)");
+        }
+        
+        function setAltitude(alt) {
+            tape5 = document.getElementById('digit5_tape');
+            tape4 = document.getElementById('digit4_tape');
+            tape3 = document.getElementById('digit3_tape');
+            tape12 = document.getElementById('digit12_tape');
+
+            // blank if leading digit is zero
+            if (Math.floor(alt / 10000) === 0) {
+                scrollAltitudeDigit(tape5, -64);
+            }
+            else {
+                scrollAltitudeDigit(tape5, Math.floor(alt / 10000)*32);
+            }
+            digit4 = ((alt % 10000) - (alt % 1000)) / 1000;
+            scrollAltitudeDigit(tape4, Math.floor(digit4)*32);
+            digit3 = ((alt % 1000) - (alt % 100)) / 100;
+            scrollAltitudeDigit(tape3, Math.floor(digit3)*25);
+            digit12 = (alt % 100) / 20;
+            scrollAltitudeDigit(tape12, digit12*25);
+            
+            scrollAltitudeTape(alt);
+        }
+
+        function scrollAltitudeDigit(digit_tape, value) {
+            digit_tape.setAttribute("transform", "translate(0," + value + ")");
+        }
+
+        function scrollAltitudeTape(alt) {
+            nearest = Math.round(alt / 100) * 100
+            distance = alt - nearest;
+            // alt_tape_lower2
+            tape = document.getElementById('altimeter_tape');
+            u3t = document.getElementById('alt_upper_3t');
+            u3 = document.getElementById('alt_upper_3');
+            u2t = document.getElementById('alt_upper_2t');
+            u2 = document.getElementById('alt_upper_2');
+            u1t = document.getElementById('alt_upper_1t');
+            u1 = document.getElementById('alt_upper_1');
+            ct = document.getElementById('alt_centert');
+            c = document.getElementById('alt_center');
+            l1t = document.getElementById('alt_lower_1t');
+            l1 = document.getElementById('alt_lower_1');
+            l2t = document.getElementById('alt_lower_2t');
+            l2 = document.getElementById('alt_lower_2');
+            l3t = document.getElementById('alt_lower_3t');
+            l3 = document.getElementById('alt_lower_3');
+            u3t.innerHTML = Math.floor((nearest + 300) / 1000);
+            u3.innerHTML = ('000' + Math.floor(nearest + 300) % 1000).substr(-3);
+            u2t.innerHTML = Math.floor((nearest + 200) / 1000);
+            u2.innerHTML = ('000' + Math.floor(nearest + 200) % 1000).substr(-3);
+            u1t.innerHTML = Math.floor((nearest + 100) / 1000);
+            u1.innerHTML = ('000' + Math.floor(nearest + 100) % 1000).substr(-3);
+            ct.innerHTML = Math.floor((nearest) / 1000);
+            c.innerHTML = ('000' + Math.floor(nearest) % 1000).substr(-3);
+            l1t.innerHTML = Math.floor((nearest - 100) / 1000);
+            l1.innerHTML = ('000' + Math.floor(nearest - 100) % 1000).substr(-3);
+            l2t.innerHTML = Math.floor((nearest - 200) / 1000);
+            l2.innerHTML = ('000' + Math.floor(nearest - 200) % 1000).substr(-3);
+            l3t.innerHTML = Math.floor((nearest - 300) / 1000);
+            l3.innerHTML = ('000' + Math.floor(nearest - 300) % 1000).substr(-3);
+            tape.setAttribute("transform", "translate(0," + (distance / 100 * 60) + ")");
+        }
+
+        function setIAS(val) {
+            as_tape = document.getElementById('as_tape');
+            as_tape.setAttribute("transform", "translate(0," + (val * 4) + ")");
+
+            as_digit3_tape = document.getElementById('as_digit3_tape');
+            as_digit2_tape = document.getElementById('as_digit2_tape');
+            as_digit1_tape = document.getElementById('as_digit1_tape');
+
+            // blank if leading digit is zero
+            if (Math.floor(val / 100) === 0) {
+                scrollAirspeedDigit(as_digit3_tape, -2);
+                if (Math.floor(val / 10) === 0) {
+                    scrollAirspeedDigit(as_digit2_tape, -2);
+                }
+                else {
+                    scrollAirspeedDigit(as_digit2_tape, Math.floor((val % 100) / 10));
+                }
+            }
+            else {
+                scrollAirspeedDigit(as_digit3_tape, Math.floor((val % 1000) / 100));
+                scrollAirspeedDigit(as_digit2_tape, Math.floor((val % 100) / 10));
+            }
+            digit3 = (val % 10);
+            scrollAirspeedDigit(as_digit1_tape, digit3);
+
+        }
+        function scrollAirspeedDigit(digit_tape, value) {
+            digit_tape.setAttribute("transform", "translate(0," + (value * 32) + ")");
+        }
+
+        function updateMapOrientation(val) {
+            map.setBearing(-1 * val);
+            
+
+            c = document.getElementById('northpointer');
+            c.setAttribute("transform", "rotate(" + (-1)*val + ",0,-10)");
+           
+
+        }
+
+        function setGS(val) {
+            gs = document.getElementById('gs');
+            gs.innerHTML = Math.round(val);
+        }
+        function setTime(val) {
+            time = document.getElementById('time');
+            time.innerHTML = val;
+        }
+
+        function setOAT(val) {
+            oat = document.getElementById('oat');
+            oat.innerHTML = Math.round(val) + " &deg;C";
+        }
+
+        function setTAS(val) {
+            tas = document.getElementById('tas');
+            tas.innerHTML = Math.round(val);
+        }
+
+        function setEGT(val) {
+            cht = document.getElementById('egtvalue');
+            cht.innerHTML = Math.round(val);
+            tpixel = 95 - ((val * 1.00 - 1000) / 500) * 80;
+            c1_egt = document.getElementById('C1_EGT');
+            c1_egt.setAttribute("y2", tpixel);
+            tpixel = 95 - ((val * 1.01 - 1000) / 500) * 80;
+            c2_egt = document.getElementById('C2_EGT');
+            c2_egt.setAttribute("y2", tpixel);
+            tpixel = 95 - ((val * 0.99 - 1000) / 500) * 80;
+            c3_egt = document.getElementById('C3_EGT');
+            c3_egt.setAttribute("y2", tpixel);
+            tpixel = 95 - ((val * 1.00 - 1000) / 500) * 80;
+            c4_egt = document.getElementById('C4_EGT');
+            c4_egt.setAttribute("y2", tpixel);
+           
+        }
+
+        function setCHT(val) {
+            
+            cht = document.getElementById('chtvalue');
+            cht.innerHTML = Math.round(val);
+            tpixel = 60 - ((val * 1.00 - 240) / 160) * 28;
+            c1_cht = document.getElementById('C1_CHT');
+            c1_cht.setAttribute("y", tpixel);
+            
+            tpixel = 60 - ((val * 1.02 - 240) / 160) * 28;
+            c2_cht = document.getElementById('C2_CHT');
+            c2_cht.setAttribute("y", tpixel);
+            
+            tpixel = 60 - ((val * 1.03 - 240) / 160) * 28;
+            c3_cht = document.getElementById('C3_CHT');
+            c3_cht.setAttribute("y", tpixel);
+            
+            tpixel = 60 - ((val  * 0.95 - 240) / 160) * 28;
+            c4_cht = document.getElementById('C4_CHT');
+            c4_cht.setAttribute("y", tpixel);
+            
+        }
+
+        function updateMap() {
+            map.setView([this.lat, this.long], 11)
+        }
+
+        function setCOM1(val) {
+            com1_stby = document.getElementById('COM1');
+            com1_stby.innerHTML = ('0' + val).substr(1,3) + "." + ('0' + val).substr(4,6);
+            com1_label_stby = document.getElementById('COM1_LABEL');
+            com1_label_stby.innerHTML = getNameForFrequency(val);
+            
+        }
+        function setCOM1_STBY(val) {
+            com1_stby = document.getElementById('COM1_STBY');
+            com1_stby.innerHTML = ('0' + val).substr(1,3) + "." + ('0' + val).substr(4,6);
+            com1_label_stby = document.getElementById('COM1_LABEL_STBY');
+            com1_label_stby.innerHTML = getNameForFrequency(val);
+        }
+
+        function getNameForFrequency(freq) {
+            switch(freq) {
+                case 134830:
+                    return "LSZM AD";
+                case 121500:
+                    return "EMERGENCY";
+                default:
+                    return "";
+            }
+        }
+
+    </script>
+</body>
+
+</html>

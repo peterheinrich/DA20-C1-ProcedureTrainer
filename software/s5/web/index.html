@@ -28,12 +28,12 @@
 
             <clipPath id="altitude_mask" maskContentUnits="objectBoundingBox">
                 <path
-                    d="M 245,107 L 285,107 L 285,95 L 312,95 L 312,144 L 285,144 L 285,135 L 245,135 L 245,127 L 237,120 L 245,113 L 245,106" />
+                    d="M 245,107 L 287,107 L 287,97 L 311,97 L 311,143 L 287,143 L 287,132 L 245,132 L 245,127 L 237,120 L 245,113 L 245,106" />
             </clipPath>
 
             <clipPath id="airspeed_mask" maskContentUnits="objectBoundingBox">
                 <path
-                    d="M 4,107 L 37,107 L 37,90 L 54,90 L 54,113 L 62,120 L 54,127 L 54,148 L 37,148 L 37,132 L 4,132 L 4,106" />
+                    d="M 4,107 L 38,107 L 38,91 L 53,91 L 53,113 L 62,120 L 53,127 L 53,147 L 38,147 L 38,132 L 4,132 L 4,106" />
             </clipPath>
 
             <clipPath id="airspeed_tape_mask" maskContentUnits="objectBoundingBox">
@@ -572,6 +572,9 @@
                     else if (data.name == "groundspeed-kt") {
                         updateGS(data.value);
                     }
+                    else if (data.name == "true-speed-kt") {
+                        updateTAS(data.value);
+                    }
                     else if (data.name == "temperature-degc") {
                         updateOAT(data.value);
                     }
@@ -613,7 +616,7 @@
             displayString = "";
             val = Math.round(val);
             if (val == 360) val = 0;
-            
+
             if(val < 100)
                 displayString = "0";
             if(val < 10)
@@ -655,22 +658,33 @@
             as_digit2_tape = document.getElementById('as_digit2_tape');
             as_digit1_tape = document.getElementById('as_digit1_tape');
 
+
+            digit1 = (val % 10);
+            digit2 = Math.floor((val % 100) / 10);
+            digit3 = Math.floor((val % 1000) / 100);
+            
+           
+            if(digit1 > 9.0 && digit1 <= 10.0) {
+                digit2 += (digit1 - 9);
+            }
+            if(digit2 > 9.0 && digit2 <= 10.0) {
+                digit3 += (digit2 - 9);
+            }
             // blank if leading digit is zero
-            if (Math.floor(val / 100) === 0) {
+            if (digit3 < 1) {
                 scrollAirspeedDigit(as_digit3_tape, -2);
-                if (Math.floor(val / 10) === 0) {
+                if (digit2 < 1) {
                     scrollAirspeedDigit(as_digit2_tape, -2);
                 }
                 else {
-                    scrollAirspeedDigit(as_digit2_tape, Math.floor((val % 100) / 10));
+                    scrollAirspeedDigit(as_digit2_tape, digit2);
                 }
             }
             else {
-                scrollAirspeedDigit(as_digit3_tape, Math.floor((val % 1000) / 100));
-                scrollAirspeedDigit(as_digit2_tape, Math.floor((val % 100) / 10));
+                scrollAirspeedDigit(as_digit3_tape, digit3);
+                scrollAirspeedDigit(as_digit2_tape, digit2);
             }
-            digit3 = (val % 10);
-            scrollAirspeedDigit(as_digit1_tape, digit3);
+            scrollAirspeedDigit(as_digit1_tape, digit1);
 
         }
         function scrollAirspeedDigit(digit_tape, value) {
@@ -705,13 +719,21 @@
             else {
                 scrollAltitudeDigit(tape5, Math.floor(alt / 10000));
             }
-            digit4 = ((alt % 10000) - (alt % 1000)) / 1000;
-            scrollAltitudeDigit(tape4, digit4);
-            digit3 = ((alt % 1000) - (alt % 100)) / 100;
-            scrollAltitudeDigit(tape3, digit3);
-            digit12 = (alt % 100) / 20;
-            scrollAltitudeDigit(tape12, digit12);
 
+            digit12 = (alt % 100) / 20;
+            digit3 = Math.floor((alt % 1000) / 100); 
+            digit4 = Math.floor((alt % 10000) / 1000); 
+            
+            if(digit12 > 4.5 && digit12 <= 5.0) {
+                digit3 += (digit12 - 4.5) * 2;
+            }
+            if(digit3 > 9.0 && digit3 <= 10.0) {
+                digit4 += (digit3 - 9);
+            }
+
+            scrollAltitudeDigit(tape4, digit4);
+            scrollAltitudeDigit(tape3, digit3);
+            scrollAltitudeDigit(tape12, digit12);
             scrollAltitudeTape(alt);
         }
 
