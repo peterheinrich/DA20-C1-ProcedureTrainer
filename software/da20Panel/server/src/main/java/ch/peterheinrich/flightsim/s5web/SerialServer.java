@@ -14,8 +14,8 @@ public class SerialServer {
 		port.setFlowControl(SerialPort.FLOW_CONTROL_DISABLED);
 		port.setNumDataBits(8);
 		port.setParity(SerialPort.NO_PARITY);
-		port.setNumStopBits(0);
-        port.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 100, 0);
+		port.setNumStopBits(1);
+        port.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 1000, 0);
 
 		if(!port.openPort()) {
 			System.err.println("Could not open COM port!");
@@ -27,19 +27,20 @@ public class SerialServer {
         StringBuffer sb = new StringBuffer();
         Character lastchar = 0x0;
         while(lastchar != '\n') {
-            byte[] readBuffer = new byte[port.bytesAvailable()];
+            byte[] readBuffer = new byte[1];
             int numRead = port.readBytes(readBuffer, readBuffer.length);
             if(numRead > 0) {
                 lastchar = (char) readBuffer[numRead - 1];
                 for (byte b : readBuffer) {
-                    sb.append(b);
+                    sb.append((char) (b & 0xFF));
                 }
             }
             else {
                 return sb.toString();
             }
         }
-        return sb.toString();
+        // remove the trailing '\n'
+        return sb.toString().substring(0, sb.toString().length()-2);
     }
     
     public void write(String s) {

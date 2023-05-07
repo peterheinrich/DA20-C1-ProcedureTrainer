@@ -949,13 +949,7 @@
             horizon.setAttribute("transform", "rotate(" + this.roll + ",0,0)  translate(0," + 14.5 * pitch + ")");
         }
 
-        setTimeout(
-            function() {
-                connectSim();
-            }, 
-            2000 // 2 second delay
-        );
-
+        setInterval(connectSim,1000);
         
         function connectSim() {
             var ws = new WebSocket('ws://localhost:8080/ws')
@@ -977,7 +971,7 @@
                         updateRollAndPitch();
                     }
                     else if (data.name == "setting-hpa") {
-                        //updateQNH(data.value);
+                         //updateQNH(data.value);
                     }
                     else if (data.name == "groundspeed-kt") {
                         setGS(data.value);
@@ -993,11 +987,9 @@
                     }
                     else if (data.name == "latitude-deg") {
                         setLat(data.value);
-                        updateMap();
                     }
                     else if (data.name == "longitude-deg") {
                         setLong(data.value);
-                        updateMap();
                     }
                     else if (data.name == "indicated-track-true-deg") {
                         updateMapOrientation(data.value);
@@ -1037,7 +1029,6 @@
                     else if (data.name == "gmt-string") {
                         setTime(data.value);
                     }
-                    debugger;
                   
                 } catch (e) {
                     console.log('Exception in onmessage:' + e)
@@ -1063,10 +1054,17 @@
         }
 
         function setLat(val) {
-            this.lat = val;
+            if (Math.abs(this.lat - val)>0.0001) {
+                this.lat = val;
+                updateMap();
+            }
         }
         function setLong(val) {
-            this.long = val;
+            if (Math.abs(this.long - val)>0.0001) {
+                this.long = val;
+                updateMap();
+            }
+
         }
 
         function updateRPM(val) {
@@ -1334,6 +1332,9 @@
         }
 
         function updateMapOrientation(val) {
+            if (Math.abs(this.long - (-1 * val))<=0.5)
+                return;
+
             map.setBearing(-1 * val);
             
 

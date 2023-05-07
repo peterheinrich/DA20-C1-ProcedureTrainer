@@ -1,7 +1,5 @@
 package ch.peterheinrich.flightsim.s5web;
 
-import javax.swing.text.Position;
-
 import lombok.Data;
 
 @Data
@@ -21,7 +19,6 @@ public class DA20PanelModel {
     private float flapsIn;
 
     private float flapsOut;
-    private int 
 
 
     public String toMessage() {
@@ -42,24 +39,32 @@ public class DA20PanelModel {
         sb.append(",");
         sb.append(avionicsIn?"1":"0");
         sb.append(",");
+        sb.append(pumpIn?"1":"0");
+        sb.append(",");
         sb.append(generatorIn?"1":"0");
         sb.append(",");
         sb.append(batteryIn?"1":"0");
         sb.append(",");
         sb.append(flapsIn);
+        sb.append("\n");
         return sb.toString();
     }
 
-    public void fromBytes(byte d0_7, byte d8_15, byte d16_23, byte d24_31) {
-        epuIn = ((d0_7 & 0x01 << 1) >> 1) == 1;
-        landingLightsIn = ((d0_7 & 0x01 << 2) >> 2) == 1;
-        taxiLightsIn = ((d0_7 & 0x01 << 3) >> 3) == 1;
-        navLightsIn = ((d0_7 & 0x01 << 4) >> 4) == 1;
-        strobeIn = ((d0_7 & 0x01 << 5) >> 5) == 1;
-        boolean mag0 = ((d0_7 & 0x01 << 7) >> 7) == 1;
-        boolean mag1 = ((d8_15 & 0x01 << 0) >> 0) == 1;
-        boolean mag2 = ((d8_15 & 0x01 << 1) >> 1) == 1;
-        boolean mag3 = ((d8_15 & 0x01 << 2) >> 2) == 1;
+    public void fromBytes(int d0_7, int d8_15, int d16_23, int d24_31) {
+        d0_7 = d0_7 & 0xFF;
+        d8_15 =d8_15 & 0xFF;
+        d16_23 =d16_23 & 0xFF;
+        d24_31 = d24_31 & 0xFF;
+
+        epuIn = !(((d0_7 >> 1) & 0x01) == 1);
+        landingLightsIn = !(((d0_7 >> 2) & 0x01) == 1);
+        taxiLightsIn = !(((d0_7 >> 3) & 0x01) == 1);
+        navLightsIn = !(((d0_7 >> 4) & 0x01) == 1);
+        strobeIn = !(((d0_7 >> 5) & 0x01) == 1);
+        boolean mag0 = !(((d0_7 >> 7) & 0x01) == 1);
+        boolean mag1 = !(((d8_15 >> 0) & 0x01) == 1);
+        boolean mag2 = !(((d8_15 >> 1) & 0x01) == 1);
+        boolean mag3 = !(((d8_15 >> 2) & 0x01) == 1);
 
         if(mag0) magnetosIn = 0;
         else if(mag1) magnetosIn = 1;
@@ -67,19 +72,20 @@ public class DA20PanelModel {
         else if(mag3) magnetosIn = 3;
         else magnetosIn = 3;
 
-        starterIn = ((d8_15 & 0x01 << 3) >> 3) == 1;
-        avionicsIn = ((d8_15 & 0x01 << 5) >> 5) == 1;
-        pumpIn = ((d8_15 & 0x01 << 6) >> 6) == 1;
-        generatorIn = ((d8_15 & 0x01 << 7) >> 7) == 1;
-        batteryIn = ((d8_15 & 0x01 << 7) >> 7) == 1;
+        starterIn = !(((d8_15 >> 3) & 0x01) == 1);
+        avionicsIn = !(((d8_15 >> 5) & 0x01) == 1);
+        pumpIn = !(((d8_15 >> 6) & 0x01) == 1);
+        generatorIn = !(((d8_15 >> 7) & 0x01) == 1);
+        batteryIn = generatorIn;
 
-        boolean flaps_down = ((d16_23 & 0x01 << 1) >> 1) == 1;
-        boolean flaps_up = ((d16_23 & 0x01 << 0) >> 0) == 1;
+        boolean flaps_down = !(((d16_23 >> 1) & 0x01) == 1);
+        boolean flaps_up = !(((d16_23 >> 0) & 0x01) == 1);
 
         if(!flaps_up && ! flaps_down) flapsIn = (float)0.375;
         else if(flaps_down) flapsIn = (float)1.0;
         else if(flaps_up) flapsIn = (float)0;
         else flapsIn = (float)0.375;
+
     }
     
     

@@ -546,7 +546,8 @@
         var pitch = 0.0;
         var roll = 10.0;
 
-        connectSim();
+        setTimeout(connectSim, 5000);
+
         function connectSim() {
             var ws = new WebSocket('ws://localhost:8080/ws')
             ws.onopen = function (ev) {

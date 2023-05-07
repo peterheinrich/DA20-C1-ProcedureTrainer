@@ -87,13 +87,13 @@
       <chunk>
         <name>LAT</name>
         <type>float</type>
-        <format>%.6f</format>
+        <format>%.4f</format>
         <node>/position/latitude-deg</node>
       </chunk>
       <chunk>
         <name>LONG</name>
         <type>float</type>
-        <format>%.6f</format>
+        <format>%.4f</format>
         <node>/position/longitude-deg</node>
       </chunk>
       <chunk>

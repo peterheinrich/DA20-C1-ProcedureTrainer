@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+
+<PropertyList>
+
+<generic>
+    <input>   
+        <line_separator>\n</line_separator>
+        <var_separator>,</var_separator>
+   
+        <chunk>
+            <name>EPU</name>
+            <node>/controls/electric/external_power</node>
+            <type>bool</type>
+        </chunk>
+        
+	<chunk>
+            <name>Landing</name>
+            <node>/controls/lighting/landing-lights</node>
+            <type>bool</type>
+        </chunk>
+        
+	<chunk>
+            <name>Taxi</name>
+            <node>/controls/lighting/taxi-light</node>
+            <type>bool</type>
+        </chunk>
+	
+	<chunk>
+            <name>Position</name>
+            <node>/controls/lighting/nav-lights</node>
+            <type>bool</type>
+        </chunk>
+	
+	<chunk>
+            <name>Strobe</name>
+            <node>/controls/lighting/strobe</node>
+            <type>bool</type>
+        </chunk>
+
+	<chunk>
+            <name>Mags</name>
+            <node>/controls/engines/engine/magnetos</node>
+            <type>integer</type>
+        </chunk>
+
+        <chunk>
+            <name>Starter</name>
+            <node>/controls/engines/engine/starter</node>
+            <type>bool</type>
+        </chunk>
+        
+	<chunk>
+            <name>Avionics</name>
+            <node>/controls/avionics/power</node>
+            <type>bool</type>
+        </chunk>
+ 
+        <chunk>
+            <name>Fuel Pump</name>
+            <node>/controls/engines/engine/fuel-pump</node>
+            <type>bool</type>
+        </chunk>
+        
+        <chunk>
+            <name>Gen</name>
+            <node>/controls/electric/engine/generator</node>
+            <type>bool</type>
+        </chunk>
+        
+        <chunk>
+            <name>Bat</name>
+            <node>/controls/electric/battery-switch</node>
+            <type>bool</type>
+        </chunk>
+        
+        <chunk>
+            <name>Flaps</name>
+            <node>/controls/flight/flaps</node>
+            <type>float</type>
+        </chunk>
+    </input>
+</generic>
+</PropertyList>

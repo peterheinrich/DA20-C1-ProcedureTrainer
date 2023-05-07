@@ -33,6 +33,9 @@ public class DA20PanelApplication implements CommandLineRunner{
 	@Autowired 
 	private UDPServer flightSim;
 
+	DA20PanelModel model = new DA20PanelModel();
+
+
 	@Override
 	public void run(String... args) throws Exception { 
 		rp2040.openConnection();
@@ -41,10 +44,9 @@ public class DA20PanelApplication implements CommandLineRunner{
 			String[] bytevals = s.split(",");
 			// String was only partially transmitted!
 			if(bytevals.length < 4) continue;
-
-
+			model.fromBytes(Integer.parseInt(bytevals[3],16),Integer.parseInt(bytevals[2],16),Integer.parseInt(bytevals[1],16),Integer.parseInt(bytevals[0],16));
+			flightSim.send(model.toMessage());
 		}
-
 	}
 
 	
