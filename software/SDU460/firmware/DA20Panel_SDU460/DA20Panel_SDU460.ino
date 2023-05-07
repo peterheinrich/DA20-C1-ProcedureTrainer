@@ -114,11 +114,11 @@ void loop() {
   String line = String(buffer);
   char byteBuffer[8];
   char *end;
-  line.substring(0,1).toCharArray(byteBuffer, 8);
+  line.substring(0,2).toCharArray(byteBuffer, 8);
   unsigned char c0 = strtol(byteBuffer,&end,16);
-  line.substring(3,4).toCharArray(byteBuffer, 8);
+  line.substring(3,5).toCharArray(byteBuffer, 8);
   unsigned char c1 = strtol(byteBuffer,&end,16);
-  line.substring(6,7).toCharArray(byteBuffer, 8);
+  line.substring(6,8).toCharArray(byteBuffer, 8);
   unsigned char c2= strtol(byteBuffer,&end,16);  
   outputRegister = c0 | c1 << 8 | c2 << 16;
 

@@ -15,6 +15,8 @@ public class UDPServer {
 
     @Autowired
     private SerialServer rp2040;
+    DA20PanelModel model = new DA20PanelModel();
+
 
     private DatagramSocket socket;
     private InetAddress address;
@@ -41,11 +43,7 @@ public class UDPServer {
 
     @ServiceActivator(inputChannel = "udpChannel")
     public void handleMessage(Message<String> message) {
-        String line = new String(message.getPayload());
-        String[] data = line.split(",");
-        if(data.length < 10) {
-            System.out.println("Data truncated!");
-            return;
-        }
+        model.fromMessage(message.getPayload());
+        rp2040.write(model.toPanelBytes());
     }
 }
