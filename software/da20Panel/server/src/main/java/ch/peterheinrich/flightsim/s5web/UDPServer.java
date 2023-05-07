@@ -24,7 +24,7 @@ public class UDPServer {
     public UDPServer() {
         try {
             socket = new DatagramSocket();
-            address = InetAddress.getByName("192.168.0.185");
+            address = InetAddress.getByName("172.16.0.1");
         } catch (Exception e) {
             e.printStackTrace();
         }
