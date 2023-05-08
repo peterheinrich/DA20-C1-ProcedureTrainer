@@ -162,8 +162,7 @@ public class DA20PanelModel {
                 break;
         }
 
-        System.out.println(((b1 < 16) ? "0" : "") + Integer.toString(b1) + "," + ((b2 < 16) ? "0" : "") + Integer.toString(b2) + "," + ((b3 < 16) ? "0" : "") + Integer.toString(b3));
-        return (((b3 < 16) ? "0" : "") + Integer.toString(b3) + "," + ((b2 < 16) ? "0" : "") + Integer.toString(b2) + "," + ((b1 < 16) ? "0" : "") + Integer.toString(b1) + "\n");
+        return (((b3 < 16) ? "0" : "") + Integer.toString(b3,16) + "," + ((b2 < 16) ? "0" : "") + Integer.toString(b2,16) + "," + ((b1 < 16) ? "0" : "") + Integer.toString(b1,16) + "\n");
     }
 
 }

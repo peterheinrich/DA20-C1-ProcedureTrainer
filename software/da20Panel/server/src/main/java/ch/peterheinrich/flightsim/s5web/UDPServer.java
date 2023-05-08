@@ -45,5 +45,6 @@ public class UDPServer {
     public void handleMessage(Message<String> message) {
         model.fromMessage(message.getPayload());
         rp2040.write(model.toPanelBytes());
+	System.out.println(model.toPanelBytes());
     }
 }

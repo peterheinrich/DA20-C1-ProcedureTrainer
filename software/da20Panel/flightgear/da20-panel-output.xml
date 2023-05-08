@@ -18,8 +18,8 @@
                 <name>Trim</name>
                 <format>%02d</format>
                 <node>/controls/flight/elevator-trim</node>
-                <factor>-10</factor>
-                <offset>10</offset>
+                <factor>-5</factor>
+                <offset>5</offset>
             </chunk>
         </output>
     </generic>
